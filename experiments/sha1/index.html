@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive SHA-1 hashing and sensitivity experiment">
+  <title>SHA-1 Interactive Simulation</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172536;
+      --muted: #5d6d7d;
+      --paper: #f5f7f3;
+      --panel: #ffffff;
+      --line: #d7e0df;
+      --teal: #087f8c;
+      --teal-dark: #05616b;
+      --orange: #e5824d;
+      --orange-soft: #fff0e8;
+      --blue-soft: #e9f4f5;
+      --shadow: 0 18px 45px rgba(23, 37, 54, 0.09);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: linear-gradient(135deg, #eef7f5 0%, var(--paper) 48%, #fff4ec 100%);
+      font: 16px/1.55 Georgia, "Times New Roman", serif;
+    }
+
+    main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0 64px; }
+
+    .eyebrow { color: var(--teal-dark); font: 700 0.78rem/1.2 "Avenir Next", "Trebuchet MS", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; }
+    h1, h2, h3 { margin: 0; font-family: "Avenir Next", "Trebuchet MS", sans-serif; line-height: 1.15; }
+    h1 { max-width: 760px; margin-top: 10px; font-size: clamp(2.35rem, 5vw, 4.5rem); letter-spacing: 0; }
+    h2 { font-size: 1.55rem; }
+    h3 { font-size: 1rem; }
+    p { margin: 0; }
+    .intro { max-width: 650px; margin-top: 18px; color: var(--muted); font-size: 1.08rem; }
+
+    .section { margin-top: 36px; padding: 28px; background: rgba(255, 255, 255, 0.87); border: 1px solid rgba(215, 224, 223, 0.9); box-shadow: var(--shadow); }
+    .section-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+    .section-heading p { color: var(--muted); font-size: 0.95rem; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    label { font: 700 0.88rem/1.2 "Avenir Next", "Trebuchet MS", sans-serif; }
+    textarea { width: 100%; min-height: 112px; resize: vertical; padding: 14px; color: var(--ink); background: #fbfcfa; border: 1px solid var(--line); border-radius: 4px; font: 1rem/1.5 Georgia, "Times New Roman", serif; }
+    textarea:focus { outline: 3px solid rgba(8, 127, 140, 0.2); border-color: var(--teal); }
+    .count { color: var(--muted); font: 0.82rem "Avenir Next", "Trebuchet MS", sans-serif; }
+    .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 18px; }
+    button { padding: 11px 17px; color: white; background: var(--teal); border: 0; border-radius: 4px; cursor: pointer; font: 700 0.88rem "Avenir Next", "Trebuchet MS", sans-serif; }
+    button:hover { background: var(--teal-dark); }
+    button.secondary { color: var(--ink); background: #e5edeb; }
+    button.secondary:hover { background: #d4e2df; }
+    button.quick { padding: 9px 12px; color: var(--teal-dark); background: var(--blue-soft); }
+    .status { min-height: 1.4em; margin-top: 14px; color: #a74627; font: 0.9rem "Avenir Next", "Trebuchet MS", sans-serif; }
+
+    .result { display: none; margin-top: 22px; padding: 20px; background: var(--blue-soft); border-left: 4px solid var(--teal); }
+    .result.visible { display: block; }
+    .result dl { display: grid; grid-template-columns: 180px 1fr; gap: 10px 20px; margin: 16px 0 0; }
+    dt { color: var(--muted); font-weight: 700; }
+    dd { margin: 0; overflow-wrap: anywhere; }
+    .hash { color: var(--teal-dark); font: 700 0.98rem/1.6 "SFMono-Regular", Consolas, monospace; letter-spacing: 0; }
+
+    .quick-tests { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .comparison { margin-top: 24px; }
+    .comparison-result { display: none; margin-top: 22px; }
+    .comparison-result.visible { display: block; }
+    .comparison-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .hash-card { min-width: 0; padding: 16px; background: #fbfcfa; border: 1px solid var(--line); }
+    .hash-card .hash { display: block; margin-top: 8px; font-size: 0.86rem; word-break: break-all; }
+    .hash-difference { margin-top: 18px; color: var(--muted); font: 0.82rem/1.9 "SFMono-Regular", Consolas, monospace; word-break: break-all; }
+    .diff { color: #b6532d; background: var(--orange-soft); font-weight: 700; }
+    .metric { margin-top: 20px; padding: 18px; background: #fffaf6; border: 1px solid #f2d8c9; }
+    .metric-line { display: flex; justify-content: space-between; gap: 12px; font-family: "Avenir Next", "Trebuchet MS", sans-serif; font-weight: 700; }
+    progress { display: block; width: 100%; height: 14px; margin-top: 12px; accent-color: var(--orange); }
+    .observation { margin-top: 18px; padding: 14px 16px; background: var(--orange-soft); border-left: 4px solid var(--orange); }
+    .footnote { margin-top: 22px; color: var(--muted); font-size: 0.9rem; }
+
+    @media (max-width: 680px) {
+      main { width: min(100% - 22px, 1120px); padding-top: 30px; }
+      .section { padding: 20px 16px; }
+      .grid, .comparison-grid { grid-template-columns: 1fr; }
+      .result dl { grid-template-columns: 1fr; gap: 2px; }
+      dd { margin-bottom: 8px; }
+      .metric-line { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Virtual Cryptography Laboratory</p>
+      <h1>SHA-1 Interactive Simulation</h1>
+      <p class="intro">Generate a 160-bit SHA-1 digest, then make a small change and observe how the output responds.</p>
+    </header>
+
+    <section class="section" aria-labelledby="hash-heading">
+      <div class="section-heading">
+        <h2 id="hash-heading">Generate a hash</h2>
+        <p>One message, one deterministic digest.</p>
+      </div>
+      <div class="field">
+        <label for="message-input">Input Message</label>
+        <textarea id="message-input" placeholder="Enter a message to hash" aria-describedby="character-count"></textarea>
+        <span class="count" id="character-count">Characters: 0</span>
+      </div>
+      <div class="actions">
+        <button id="generate-button" type="button">Generate SHA-1 Hash</button>
+        <button id="clear-button" class="secondary" type="button">Clear</button>
+      </div>
+      <p class="status" id="hash-status" role="status" aria-live="polite"></p>
+      <article class="result" id="hash-result" aria-live="polite">
+        <h3>SHA-1 Result</h3>
+        <dl>
+          <dt>Message</dt><dd id="result-message"></dd>
+          <dt>SHA-1 Hash</dt><dd class="hash" id="result-hash"></dd>
+          <dt>Hash Length</dt><dd>160 bits</dd>
+          <dt>Hexadecimal Length</dt><dd>40 characters</dd>
+        </dl>
+      </article>
+    </section>
+
+    <section class="section comparison" aria-labelledby="sensitivity-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Avalanche effect</p>
+          <h2 id="sensitivity-heading">SHA-1 Sensitivity Test</h2>
+        </div>
+        <p>Compare two messages at the bit level.</p>
+      </div>
+      <div class="grid">
+        <div class="field">
+          <label for="original-input">Original Message</label>
+          <textarea id="original-input" placeholder="Enter the original message"></textarea>
+        </div>
+        <div class="field">
+          <label for="modified-input">Modified Message</label>
+          <textarea id="modified-input" placeholder="Enter a modified message"></textarea>
+        </div>
+      </div>
+      <div class="quick-tests" aria-label="Quick sensitivity tests">
+        <button class="quick" type="button" data-test="case">Change Case</button>
+        <button class="quick" type="button" data-test="add">Add Character</button>
+        <button class="quick" type="button" data-test="remove">Remove Character</button>
+        <button class="quick" type="button" data-test="character">Change One Character</button>
+        <button class="quick" type="button" data-test="reset">Reset</button>
+      </div>
+      <div class="actions">
+        <button id="compare-button" type="button">Compare Hashes</button>
+      </div>
+      <p class="status" id="comparison-status" role="status" aria-live="polite"></p>
+      <article class="comparison-result" id="comparison-result" aria-live="polite">
+        <div class="comparison-grid">
+          <div class="hash-card"><h3>Original Message</h3><p id="comparison-original-message"></p><span class="hash" id="comparison-original-hash"></span></div>
+          <div class="hash-card"><h3>Modified Message</h3><p id="comparison-modified-message"></p><span class="hash" id="comparison-modified-hash"></span></div>
+        </div>
+        <p class="hash-difference" id="hash-difference" aria-label="Hexadecimal hash differences"></p>
+        <div class="metric">
+          <div class="metric-line"><span id="changed-bits">Changed Bits: 0 / 160</span><span id="changed-percentage">0.00%</span></div>
+          <progress id="sensitivity-progress" max="100" value="0" aria-label="Percentage of changed bits"></progress>
+        </div>
+        <p class="observation" id="observation"></p>
+        <p class="footnote">Each hexadecimal character represents four bits, so the 40-character display represents the complete 160-bit SHA-1 output. Highlighted characters differ between the two digests.</p>
+      </article>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
