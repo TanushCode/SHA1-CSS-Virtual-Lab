@@ -14,7 +14,8 @@ This interactive simulation generates SHA-1 digests and compares the output for 
 experiments/sha1/
 ├── index.html
 ├── script.js
-└── README.md
+├── README.md
+└── Main.java
 ```
 
 ## Features
@@ -38,7 +39,7 @@ The simulation hashes both messages, converts each 40-character hexadecimal hash
 
 ## SHA-1 Core Integration
 
-`generateSHA1(message)` in `script.js` is the browser-side SHA-1 core integration point. It currently uses the browser Web Crypto API (`crypto.subtle.digest("SHA-1", ...)`) as a temporary implementation for development and testing. The merged Java core is in `sha1-code/Main.java` and exposes a matching `generateSHA1(String input)` method for a future Java service or API adapter. A browser page cannot call a Java class directly, so connecting that service is the remaining integration step; the UI can continue to use its asynchronous contract.
+`generateSHA1(message)` in `script.js` is the browser-side SHA-1 core integration point. It currently uses the browser Web Crypto API (`crypto.subtle.digest("SHA-1", ...)`) as a temporary implementation for development and testing. The Java core is in `Main.java` in this same module and exposes a matching `generateSHA1(String input)` method for a future Java service or API adapter. A browser page cannot call a Java class directly, so connecting that service is the remaining integration step; the UI can continue to use its asynchronous contract.
 
 ## Sensitivity Integration
 
@@ -57,4 +58,4 @@ These values are validation vectors only and are not used as interactive output.
 
 ## Integration Instructions
 
-Place this module at `/experiments/sha1/` and add its `index.html` to the common navigation when the integration team connects the experiment to the wider laboratory. Keep the merged Java core in `/sha1-code/Main.java`; expose its `generateSHA1(String input)` method through the chosen backend or service before replacing the browser fallback. The module has no framework or external dependency and does not modify shared styles, navigation, or other experiments.
+Place this self-contained module at `/experiments/sha1/` and add its `index.html` to the common navigation when the integration team connects the experiment to the wider laboratory. Expose `Main.java`'s `generateSHA1(String input)` method through the chosen backend or service before replacing the browser fallback. The module has no framework or external dependency and does not modify shared styles, navigation, or other experiments.

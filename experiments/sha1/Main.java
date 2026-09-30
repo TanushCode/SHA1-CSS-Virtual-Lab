@@ -1,3 +1,5 @@
+package experiments.sha1;
+
 import java.util.Scanner;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
