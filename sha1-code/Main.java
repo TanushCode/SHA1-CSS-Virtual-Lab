@@ -32,13 +32,7 @@ class Main
                     if(input.equalsIgnoreCase("exit"))
                         break;
 
-                    md.reset();
-                    byte[] digest=md.digest(input.getBytes(StandardCharsets.UTF_8));
-
-                    for(int i=0;i<digest.length;i++)
-                    {
-                        System.out.printf("%02x",digest[i]);
-                    }
+                    System.out.println(generateSHA1(input));
 
                     System.out.println("\nEnter next text (or 'exit'):");
                 }
@@ -58,6 +52,20 @@ class Main
         }
 
         sc.close();
+    }
+
+    static String generateSHA1(String input) throws NoSuchAlgorithmException
+    {
+        MessageDigest md=MessageDigest.getInstance("SHA-1");
+        byte[] digest=md.digest(input.getBytes(StandardCharsets.UTF_8));
+        StringBuilder hash=new StringBuilder();
+
+        for(int i=0;i<digest.length;i++)
+        {
+            hash.append(String.format("%02x",digest[i]));
+        }
+
+        return hash.toString();
     }
 
     static void runCorrectnessTests(MessageDigest md)
