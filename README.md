@@ -11,12 +11,14 @@ This interactive simulation generates SHA-1 digests and compares the output for 
 ## Module Structure
 
 ```text
-experiments/sha1/
+experiment-template/
 ├── index.html
+├── style.css
 ├── script.js
-├── README.md
-└── Main.java
+└── README.md
 ```
+
+This module is self-contained and does not modify the main application, shared styles, or other experiment modules.
 
 ## Features
 
@@ -37,9 +39,9 @@ The user enters a message. The output is a 160-bit SHA-1 hash represented by 40 
 
 The simulation hashes both messages, converts each 40-character hexadecimal hash into 160 bits, and counts corresponding bits that differ. The percentage is calculated as `changedBits / 160 * 100` and displayed to two decimal places.
 
-## SHA-1 Core Integration
+## SHA-1 Core
 
-`generateSHA1(message)` in `script.js` is the browser-side SHA-1 core integration point. It currently uses the browser Web Crypto API (`crypto.subtle.digest("SHA-1", ...)`) as a temporary implementation for development and testing. The Java core is in `Main.java` in this same module and exposes a matching `generateSHA1(String input)` method for a future Java service or API adapter. A browser page cannot call a Java class directly, so connecting that service is the remaining integration step; the UI can continue to use its asynchronous contract.
+`generateSHA1(message)` in `script.js` uses the browser Web Crypto API when available and includes a local SHA-1 fallback for non-secure HTTP contexts. No backend, Java file, framework, or external dependency is required.
 
 ## Sensitivity Integration
 
@@ -58,4 +60,14 @@ These values are validation vectors only and are not used as interactive output.
 
 ## Integration Instructions
 
-Place this self-contained module at `/experiments/sha1/` and add its `index.html` to the common navigation when the integration team connects the experiment to the wider laboratory. Expose `Main.java`'s `generateSHA1(String input)` method through the chosen backend or service before replacing the browser fallback. The module has no framework or external dependency and does not modify shared styles, navigation, or other experiments.
+Place this self-contained module at `/experiments/sha1/` and add its `index.html` to the common navigation when the integration team connects the experiment to the wider laboratory. The module has no framework or external dependency and does not modify shared styles, navigation, or other experiments.
+
+## Evaluation Questions
+
+1. Why does SHA-1 always produce a 160-bit digest?
+2. How does changing one input character demonstrate the avalanche effect?
+3. Why is SHA-1 no longer recommended for collision-resistant security applications?
+
+## Quiz Questions
+
+The Assessment pane includes five multiple-choice questions covering SHA-1 digest size, block size, compression rounds, the avalanche effect, and the reason SHA-1 was deprecated.
