@@ -1242,3 +1242,147 @@ progress {
     align-items: flex-start;
   }
 }
+
+/* ==========================================================================
+   Interactive Stepper — Procedure Pane
+   ========================================================================== */
+.stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 16px 0 24px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius-sm);
+  overflow: hidden;
+}
+
+.stepper-item {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.stepper-item:last-child {
+  border-bottom: none;
+}
+
+.stepper-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--panel-alt);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  transition: background var(--transition-fast);
+}
+
+.stepper-header:hover {
+  background: var(--accent-brown-soft);
+}
+
+.stepper-item.open > .stepper-header {
+  background: var(--accent-brown-soft);
+  color: var(--accent-brown);
+  font-weight: 600;
+}
+
+.stepper-num {
+  min-width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--header-bg);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.82rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: background var(--transition-fast);
+}
+
+.stepper-item.open .stepper-num {
+  background: var(--accent-brown);
+}
+
+.stepper-item.done .stepper-num {
+  background: var(--accent-green);
+}
+
+.stepper-title {
+  flex: 1;
+  font-weight: 600;
+}
+
+.stepper-chevron {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform var(--transition-fast);
+}
+
+.stepper-item.open .stepper-chevron {
+  transform: rotate(180deg);
+}
+
+.stepper-body {
+  padding: 16px 20px 18px 20px;
+  background: var(--panel-bg);
+  border-top: 1px solid var(--border-light);
+  line-height: 1.65;
+  font-size: 0.93rem;
+}
+
+.stepper-body p {
+  margin-bottom: 10px;
+}
+
+.step-tip {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #fff8f0;
+  border-left: 3px solid var(--accent-brown);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.stepper-nav {
+  margin-top: 14px;
+}
+
+.btn-sm {
+  padding: 7px 16px !important;
+  font-size: 0.85rem !important;
+}
+
+.stepper-complete {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: var(--accent-green-soft);
+  border: 1px solid #bce2be;
+  border-radius: 6px;
+  color: var(--accent-green);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   Quiz Section Headers
+   ========================================================================== */
+.quiz-section-header {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-brown);
+  background: var(--accent-brown-soft);
+  border: 1px solid #ddd0c8;
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 22px 0 12px;
+}
+

@@ -6,6 +6,20 @@
   <meta name="description" content="Virtual Cryptography Laboratory - SHA-1 Hash Algorithm and Sensitivity Interactive Simulation">
   <title>Virtual Cryptography Lab | SHA-1 Hash Algorithm</title>
   <link rel="stylesheet" href="style.css">
+  <!-- MathJax: renders inline $...$ and display $$...$$ LaTeX math expressions -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
 </head>
 <body>
 
@@ -351,59 +365,149 @@
       <section class="section-pane content-pane" id="pane-procedure" data-index="3" data-category="theory" aria-labelledby="heading-procedure">
         <span class="section-badge">Laboratory Guidelines</span>
         <h2 id="heading-procedure">Experiment Procedure</h2>
-        <p class="lead-p">Follow these sequential instructions to perform the SHA-1 generation and sensitivity evaluation.</p>
+        <p class="lead-p">Click each step below to walk through the procedure one stage at a time.</p>
 
         <h3>Real Laboratory Procedure</h3>
-        <ol class="procedure-steps">
-          <li class="procedure-step-item">
-            <span class="step-num-badge">1</span>
-            <div class="step-content">
-              <h4>Input Selection & ASCII Conversion</h4>
-              <p>Choose an alphanumeric input string $M$. Convert each ASCII character into its 8-bit binary representation to compute the initial bit length $L$.</p>
-            </div>
-          </li>
-          <li class="procedure-step-item">
-            <span class="step-num-badge">2</span>
-            <div class="step-content">
-              <h4>Padding & Length Block Construction</h4>
-              <p>Append a '1' bit followed by $k$ zero bits such that the resulting block length is $448 \pmod{512}$. Append the 64-bit big-endian binary representation of length $L$.</p>
-            </div>
-          </li>
-          <li class="procedure-step-item">
-            <span class="step-num-badge">3</span>
-            <div class="step-content">
-              <h4>Register Initialization & Round Execution</h4>
-              <p>Initialize the 5 state registers $A, B, C, D, E$ with standard IV constants. Execute the 80 rounds of compression for each 512-bit block.</p>
-            </div>
-          </li>
-          <li class="procedure-step-item">
-            <span class="step-num-badge">4</span>
-            <div class="step-content">
-              <h4>Sensitivity / Mutation Test</h4>
-              <p>Introduce a 1-bit or 1-character modification in the input string. Compute the new 160-bit digest.</p>
-            </div>
-          </li>
-          <li class="procedure-step-item">
-            <span class="step-num-badge">5</span>
-            <div class="step-content">
-              <h4>Bitwise Variance Calculation</h4>
-              <p>Convert both 40-character hexadecimal digests into their respective 160-bit binary sequences. Perform bitwise XOR and calculate the percentage of changed bits:</p>
-              <div class="formula-block">
-                Percentage Difference = (Changed Bits / 160) × 100%
-              </div>
-            </div>
-          </li>
-        </ol>
+        <div class="stepper" id="stepper-real" role="list">
 
-        <h3>Virtual Laboratory Procedure</h3>
-        <ol>
-          <li>Navigate to the <strong>Simulation</strong> resource tab from the right-hand panel.</li>
-          <li>In the <strong>Generate SHA-1 Hash</strong> section, type any message into the <em>Input Message</em> box (note the real-time character counter).</li>
-          <li>Click <strong>Generate SHA-1 Hash</strong> to obtain the 40-character hexadecimal digest. Verify that the output length is consistently 160 bits regardless of message length.</li>
-          <li>Scroll to the <strong>Sensitivity Test</strong> section. Enter an original message, then modify it manually or click one of the quick sensitivity presets (<em>Change Case, Add Character, Remove Character, Change One Character</em>).</li>
-          <li>Click <strong>Compare Hashes</strong> to view the bit-level comparison, changed bit count, percentage progress bar, and difference visualization.</li>
-          <li>Review the observation card to confirm the presence of the Avalanche Effect.</li>
-        </ol>
+          <div class="stepper-item" data-step="1" role="listitem">
+            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="real-step-body-1">
+              <span class="stepper-num">1</span>
+              <span class="stepper-title">Input Selection &amp; ASCII Conversion</span>
+              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="stepper-body" id="real-step-body-1" hidden>
+              <p>Choose an alphanumeric input string $M$. Convert each ASCII character into its 8-bit binary representation to compute the initial bit length $L$.</p>
+              <div class="step-tip">&#x1F4A1; <strong>Example:</strong> For the message <code>abc</code>, $L = 3 \times 8 = 24$ bits.</div>
+              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-real">Next Step &#x2192;</button></div>
+            </div>
+          </div>
+
+          <div class="stepper-item" data-step="2" role="listitem">
+            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="real-step-body-2">
+              <span class="stepper-num">2</span>
+              <span class="stepper-title">Padding &amp; Length Block Construction</span>
+              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="stepper-body" id="real-step-body-2" hidden>
+              <p>Append a single <code>1</code> bit, followed by enough <code>0</code> bits so that the total length satisfies $(L + 1 + k) \equiv 448 \pmod{512}$. Then append the original length $L$ as a 64-bit big-endian integer.</p>
+              <div class="step-tip">&#x1F4A1; Padding is always performed &#x2014; even if the message is already the right length &#x2014; to ensure the standard is consistently applied.</div>
+              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-real">Next Step &#x2192;</button></div>
+            </div>
+          </div>
+
+          <div class="stepper-item" data-step="3" role="listitem">
+            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="real-step-body-3">
+              <span class="stepper-num">3</span>
+              <span class="stepper-title">Register Initialization &amp; Round Execution</span>
+              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="stepper-body" id="real-step-body-3" hidden>
+              <p>Initialize the 5 working registers $(A, B, C, D, E)$ with the standard SHA-1 IV constants. For each 512-bit block, execute all 80 rounds of compression, updating registers each round.</p>
+              <div class="formula-block" style="margin-top:10px;font-size:0.88rem">
+                A=0x67452301 &nbsp; B=0xEFCDAB89 &nbsp; C=0x98BADCFE &nbsp; D=0x10325476 &nbsp; E=0xC3D2E1F0
+              </div>
+              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-real">Next Step &#x2192;</button></div>
+            </div>
+          </div>
+
+          <div class="stepper-item" data-step="4" role="listitem">
+            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="real-step-body-4">
+              <span class="stepper-num">4</span>
+              <span class="stepper-title">Sensitivity / Mutation Test</span>
+              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="stepper-body" id="real-step-body-4" hidden>
+              <p>Introduce a minimal change in the original input &#x2014; flipping a single bit, changing case, or swapping one character. Compute the new 160-bit SHA-1 digest for the mutated message.</p>
+              <div class="step-tip">&#x1F4A1; Even one character change should produce a completely different digest &#x2014; this is the <strong>Avalanche Effect</strong>.</div>
+              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-real">Next Step &#x2192;</button></div>
+            </div>
+          </div>
+
+          <div class="stepper-item" data-step="5" role="listitem">
+            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="real-step-body-5">
+              <span class="stepper-num">5</span>
+              <span class="stepper-title">Bitwise Variance Calculation</span>
+              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="stepper-body" id="real-step-body-5" hidden>
+              <p>Convert both 40-character hex digests into 160-bit binary strings. XOR them bit-by-bit and count the differing positions. Compute the percentage:</p>
+              <div class="formula-block" style="margin-top:8px">Percentage Difference = (Changed Bits / 160) &#xD7; 100%</div>
+              <div class="step-tip">&#x1F3AF; A well-designed hash function should yield ~50% difference (~80 out of 160 bits changed).</div>
+              <div class="stepper-complete">&#x2705; Real Lab Procedure Complete!</div>
+            </div>
+          </div>
+
+        </div><!-- /stepper-real -->
+
+        <h3 style="margin-top:2rem">Virtual Laboratory Procedure</h3>
+        <div class="stepper" id="stepper-virtual" role="list">
+
+          <div class="stepper-item" data-step="1" role="listitem">
+            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="virt-step-body-1">
+              <span class="stepper-num">1</span>
+              <span class="stepper-title">Open the Simulation Tab</span>
+              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="stepper-body" id="virt-step-body-1" hidden>
+              <p>Click <strong>Interactive Simulation</strong> in the right-hand <em>Explanation Resources</em> panel, or press the <strong>Next Page</strong> arrow in the toolbar until you reach Section 4.</p>
+              <div class="step-tip">&#x1F4A1; You can also use the <strong>Interactive</strong> filter pill in the toolbar to quickly find simulation panes.</div>
+              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-virtual">Next Step &#x2192;</button></div>
+            </div>
+          </div>
+
+          <div class="stepper-item" data-step="2" role="listitem">
+            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="virt-step-body-2">
+              <span class="stepper-num">2</span>
+              <span class="stepper-title">Generate a SHA-1 Hash</span>
+              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="stepper-body" id="virt-step-body-2" hidden>
+              <p>In the <strong>Hash Generator</strong> sub-tab, type any message into the <em>Input Message</em> box. Observe the real-time character counter, then click <strong>Generate SHA-1 Hash</strong>.</p>
+              <div class="step-tip">&#x1F4A1; Try messages of very different lengths (e.g., <code>a</code> vs. a full sentence) and note the digest is always exactly 40 hex characters.</div>
+              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-virtual">Next Step &#x2192;</button></div>
+            </div>
+          </div>
+
+          <div class="stepper-item" data-step="3" role="listitem">
+            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="virt-step-body-3">
+              <span class="stepper-num">3</span>
+              <span class="stepper-title">Inspect the Padding</span>
+              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="stepper-body" id="virt-step-body-3" hidden>
+              <p>Switch to the <strong>Message Padding Inspector</strong> sub-tab. Enter a short string (e.g., <code>abc</code>) and click <strong>Inspect SHA-1 Padding</strong> to see how the 512-bit padded block is constructed.</p>
+              <div class="step-tip">&#x1F4A1; Observe how the original bytes, the appended <code>1</code> bit, the zero-padding, and the 64-bit length field fill exactly one 512-bit block.</div>
+              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-virtual">Next Step &#x2192;</button></div>
+            </div>
+          </div>
+
+          <div class="stepper-item" data-step="4" role="listitem">
+            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="virt-step-body-4">
+              <span class="stepper-num">4</span>
+              <span class="stepper-title">Run the Sensitivity Test</span>
+              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="stepper-body" id="virt-step-body-4" hidden>
+              <p>Switch to <strong>Sensitivity &amp; Avalanche Analysis</strong>. Enter an original message, then use one of the <em>Quick Presets</em> (Change Case, Add Character, Remove Character, Change One Character) or type a modified version manually.</p>
+              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-virtual">Next Step &#x2192;</button></div>
+            </div>
+          </div>
+
+          <div class="stepper-item" data-step="5" role="listitem">
+            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="virt-step-body-5">
+              <span class="stepper-num">5</span>
+              <span class="stepper-title">Compare &amp; Record Observations</span>
+              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="stepper-body" id="virt-step-body-5" hidden>
+              <p>Click <strong>Compare Hashes (Sensitivity Test)</strong>. Examine the highlighted differences, the changed-bits count, the percentage bar, and the observation summary to confirm the Avalanche Effect.</p>
+              <div class="step-tip">&#x1F3AF; Record the % changed bits for each preset. Ideal result: ~50% bits changed per mutation.</div>
+              <div class="stepper-complete">&#x2705; Virtual Lab Procedure Complete!</div>
+            </div>
+          </div>
+
+        </div><!-- /stepper-virtual -->
       </section>
 
       <!-- ==========================================
@@ -577,83 +681,223 @@
            ========================================== -->
       <section class="section-pane" id="pane-assessment" data-index="5" data-category="theory" aria-labelledby="heading-quiz">
         <span class="section-badge">Knowledge Verification</span>
-        <h2 id="heading-quiz">Assessment: SHA-1 Conceptual Quiz</h2>
-        <p class="lead-p">Evaluate your understanding of hash functions, SHA-1 architecture, and the avalanche effect.</p>
+        <h2 id="heading-quiz">Assessment: SHA-1 Architecture Quiz</h2>
+        <p class="lead-p">Test your understanding of SHA-1 architecture, processing pipeline, security properties, and cryptanalysis. 18 questions across 4 sections.</p>
 
         <form id="quiz-form">
           <div class="quiz-container">
-            
-            <!-- Question 1 -->
+
+            <!-- ── SECTION A: Hash Function Fundamentals ── -->
+            <div class="quiz-section-header">Section A — Hash Function Fundamentals</div>
+
             <div class="quiz-question-card" data-q="1" data-correct="c">
-              <h4>1. What is the output digest size produced by the standard SHA-1 algorithm?</h4>
+              <h4>1. What is the output digest size of the SHA-1 algorithm?</h4>
               <div class="quiz-options">
                 <label class="quiz-option-label"><input type="radio" name="q1" value="a"> 128 bits (16 bytes)</label>
                 <label class="quiz-option-label"><input type="radio" name="q1" value="b"> 256 bits (32 bytes)</label>
                 <label class="quiz-option-label"><input type="radio" name="q1" value="c"> 160 bits (20 bytes)</label>
                 <label class="quiz-option-label"><input type="radio" name="q1" value="d"> 512 bits (64 bytes)</label>
               </div>
-              <div class="quiz-explanation" id="exp-q1">
-                <strong>Explanation:</strong> SHA-1 produces a 160-bit (20-byte) hash digest, formatted as 40 hexadecimal characters. In comparison, MD5 produces 128 bits and SHA-256 produces 256 bits.
-              </div>
+              <div class="quiz-explanation" id="exp-q1"><strong>Explanation:</strong> SHA-1 always outputs a 160-bit digest, displayed as 40 hexadecimal characters. This is fixed regardless of input length.</div>
             </div>
 
-            <!-- Question 2 -->
             <div class="quiz-question-card" data-q="2" data-correct="b">
-              <h4>2. What is the block size into which the padded message is partitioned for SHA-1 processing?</h4>
+              <h4>2. A cryptographic hash function must be deterministic. What does this mean?</h4>
               <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q2" value="a"> 160 bits</label>
-                <label class="quiz-option-label"><input type="radio" name="q2" value="b"> 512 bits</label>
-                <label class="quiz-option-label"><input type="radio" name="q2" value="c"> 1024 bits</label>
-                <label class="quiz-option-label"><input type="radio" name="q2" value="d"> 256 bits</label>
+                <label class="quiz-option-label"><input type="radio" name="q2" value="a"> The same input can produce different outputs on different machines</label>
+                <label class="quiz-option-label"><input type="radio" name="q2" value="b"> The same input always produces the exact same output</label>
+                <label class="quiz-option-label"><input type="radio" name="q2" value="c"> The hash output changes every hour to prevent replay attacks</label>
+                <label class="quiz-option-label"><input type="radio" name="q2" value="d"> The output is randomised using a secret key</label>
               </div>
-              <div class="quiz-explanation" id="exp-q2">
-                <strong>Explanation:</strong> SHA-1 processes the message in 512-bit blocks (sixteen 32-bit words). Each block undergoes 80 rounds of iterative compression.
-              </div>
+              <div class="quiz-explanation" id="exp-q2"><strong>Explanation:</strong> Determinism guarantees that hashing the same message always yields the identical digest, making verification reliable across all platforms and times.</div>
             </div>
 
-            <!-- Question 3 -->
             <div class="quiz-question-card" data-q="3" data-correct="d">
-              <h4>3. How many total rounds of compression are executed for each 512-bit message block in SHA-1?</h4>
+              <h4>3. Which property states it is computationally infeasible to find any input that maps to a given hash output?</h4>
               <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q3" value="a"> 16 rounds</label>
-                <label class="quiz-option-label"><input type="radio" name="q3" value="b"> 32 rounds</label>
-                <label class="quiz-option-label"><input type="radio" name="q3" value="c"> 64 rounds</label>
-                <label class="quiz-option-label"><input type="radio" name="q3" value="d"> 80 rounds</label>
+                <label class="quiz-option-label"><input type="radio" name="q3" value="a"> Collision resistance</label>
+                <label class="quiz-option-label"><input type="radio" name="q3" value="b"> Second pre-image resistance</label>
+                <label class="quiz-option-label"><input type="radio" name="q3" value="c"> Determinism</label>
+                <label class="quiz-option-label"><input type="radio" name="q3" value="d"> Pre-image resistance (one-way property)</label>
               </div>
-              <div class="quiz-explanation" id="exp-q3">
-                <strong>Explanation:</strong> SHA-1 executes exactly 80 rounds, divided into four 20-round stages, each with its own non-linear function and constant.
-              </div>
+              <div class="quiz-explanation" id="exp-q3"><strong>Explanation:</strong> Pre-image resistance (one-way property) ensures that given only a hash $h$, you cannot efficiently find $m$ such that $H(m) = h$. This underpins password hashing security.</div>
             </div>
 
-            <!-- Question 4 -->
             <div class="quiz-question-card" data-q="4" data-correct="a">
-              <h4>4. In an ideal cryptographic hash algorithm, what percentage of output bits should change when a single input bit changes (Avalanche Effect)?</h4>
+              <h4>4. What is the maximum length of the input message that SHA-1 can process?</h4>
               <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q4" value="a"> Approximately 50% (~80 bits)</label>
-                <label class="quiz-option-label"><input type="radio" name="q4" value="b"> Exactly 100% (160 bits)</label>
-                <label class="quiz-option-label"><input type="radio" name="q4" value="c"> Less than 10%</label>
-                <label class="quiz-option-label"><input type="radio" name="q4" value="d"> Exactly 1 bit</label>
+                <label class="quiz-option-label"><input type="radio" name="q4" value="a"> $2^{64} - 1$ bits</label>
+                <label class="quiz-option-label"><input type="radio" name="q4" value="b"> $2^{32} - 1$ bits</label>
+                <label class="quiz-option-label"><input type="radio" name="q4" value="c"> $2^{128} - 1$ bits</label>
+                <label class="quiz-option-label"><input type="radio" name="q4" value="d"> Unlimited</label>
               </div>
-              <div class="quiz-explanation" id="exp-q4">
-                <strong>Explanation:</strong> The strict avalanche criterion (SAC) states that each output bit should flip with probability 0.5 when any single input bit is flipped, yielding ~50% bit variance.
-              </div>
+              <div class="quiz-explanation" id="exp-q4"><strong>Explanation:</strong> The SHA-1 standard (FIPS 180-1) specifies a maximum message length of $2^{64} - 1$ bits. The 64-bit length field appended during padding encodes this value.</div>
             </div>
 
-            <!-- Question 5 -->
-            <div class="quiz-question-card" data-q="5" data-correct="c">
-              <h4>5. Why has SHA-1 been deprecated by NIST and major certificate authorities for digital signatures?</h4>
+            <div class="quiz-question-card" data-q="5" data-correct="b">
+              <h4>5. Which NIST standard originally published the SHA-1 specification?</h4>
               <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q5" value="a"> It is too computationally slow for modern processors</label>
-                <label class="quiz-option-label"><input type="radio" name="q5" value="b"> Its output hash size cannot be represented in hexadecimal</label>
-                <label class="quiz-option-label"><input type="radio" name="q5" value="c"> Practical collision attacks (e.g. SHAttered) broke collision resistance</label>
-                <label class="quiz-option-label"><input type="radio" name="q5" value="d"> It lacks a length-padding specification</label>
+                <label class="quiz-option-label"><input type="radio" name="q5" value="a"> FIPS PUB 140-2</label>
+                <label class="quiz-option-label"><input type="radio" name="q5" value="b"> FIPS PUB 180-1</label>
+                <label class="quiz-option-label"><input type="radio" name="q5" value="c"> FIPS PUB 197</label>
+                <label class="quiz-option-label"><input type="radio" name="q5" value="d"> RFC 2104</label>
               </div>
-              <div class="quiz-explanation" id="exp-q5">
-                <strong>Explanation:</strong> Practical collision attacks (demonstrated by Google and CWI Amsterdam in 2017) proved that distinct files can produce identical SHA-1 hashes, rendering it insecure for signatures.
-              </div>
+              <div class="quiz-explanation" id="exp-q5"><strong>Explanation:</strong> SHA-1 was standardised in FIPS PUB 180-1 (1995). FIPS 140-2 covers cryptographic module validation, FIPS 197 is AES, and RFC 2104 defines HMAC.</div>
             </div>
 
-          </div>
+            <!-- ── SECTION B: SHA-1 Processing Pipeline ── -->
+            <div class="quiz-section-header">Section B — SHA-1 Processing Pipeline</div>
+
+            <div class="quiz-question-card" data-q="6" data-correct="c">
+              <h4>6. During SHA-1 padding, the message is padded so its bit length is congruent to which value modulo 512?</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q6" value="a"> 256</label>
+                <label class="quiz-option-label"><input type="radio" name="q6" value="b"> 512</label>
+                <label class="quiz-option-label"><input type="radio" name="q6" value="c"> 448</label>
+                <label class="quiz-option-label"><input type="radio" name="q6" value="d"> 0</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q6"><strong>Explanation:</strong> Padding makes the message length $\equiv 448 \pmod{512}$. The remaining 64 bits are used to encode the original message length, making the total a multiple of 512.</div>
+            </div>
+
+            <div class="quiz-question-card" data-q="7" data-correct="a">
+              <h4>7. How many 32-bit working registers does SHA-1 use during its compression function?</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q7" value="a"> 5 registers (A, B, C, D, E)</label>
+                <label class="quiz-option-label"><input type="radio" name="q7" value="b"> 4 registers (A, B, C, D)</label>
+                <label class="quiz-option-label"><input type="radio" name="q7" value="c"> 8 registers</label>
+                <label class="quiz-option-label"><input type="radio" name="q7" value="d"> 16 registers</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q7"><strong>Explanation:</strong> SHA-1 uses five 32-bit registers $A, B, C, D, E$ (total 160 bits). After all blocks are processed, these are concatenated to produce the final digest.</div>
+            </div>
+
+            <div class="quiz-question-card" data-q="8" data-correct="d">
+              <h4>8. In SHA-1's message schedule, the 16 original 32-bit words $W_0$–$W_{15}$ are expanded to how many words?</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q8" value="a"> 32 words</label>
+                <label class="quiz-option-label"><input type="radio" name="q8" value="b"> 48 words</label>
+                <label class="quiz-option-label"><input type="radio" name="q8" value="c"> 64 words</label>
+                <label class="quiz-option-label"><input type="radio" name="q8" value="d"> 80 words ($W_0$–$W_{79}$)</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q8"><strong>Explanation:</strong> SHA-1 expands the 16 message words into 80 words using: $W_t = \text{ROTL}^1(W_{t-3} \oplus W_{t-8} \oplus W_{t-14} \oplus W_{t-16})$ for $t = 16$ to $79$.</div>
+            </div>
+
+            <div class="quiz-question-card" data-q="9" data-correct="b">
+              <h4>9. The 80 compression rounds in SHA-1 are divided into how many stages?</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q9" value="a"> 2 stages of 40 rounds each</label>
+                <label class="quiz-option-label"><input type="radio" name="q9" value="b"> 4 stages of 20 rounds each</label>
+                <label class="quiz-option-label"><input type="radio" name="q9" value="c"> 5 stages of 16 rounds each</label>
+                <label class="quiz-option-label"><input type="radio" name="q9" value="d"> 8 stages of 10 rounds each</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q9"><strong>Explanation:</strong> SHA-1 organises 80 rounds into 4 stages (rounds 0–19, 20–39, 40–59, 60–79), each using a distinct non-linear function $f_t$ and additive constant $K_t$.</div>
+            </div>
+
+            <div class="quiz-question-card" data-q="10" data-correct="c">
+              <h4>10. What logical function does SHA-1 use during rounds 20–39 (Stage 2)?</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q10" value="a"> $(B \land C) \lor (\neg B \land D)$ — Conditional (Ch)</label>
+                <label class="quiz-option-label"><input type="radio" name="q10" value="b"> $(B \land C) \lor (B \land D) \lor (C \land D)$ — Majority (Maj)</label>
+                <label class="quiz-option-label"><input type="radio" name="q10" value="c"> $B \oplus C \oplus D$ — Parity (XOR)</label>
+                <label class="quiz-option-label"><input type="radio" name="q10" value="d"> $B \land C \land D$ — AND</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q10"><strong>Explanation:</strong> Stages 2 and 4 both use the Parity function $f_t(B, C, D) = B \oplus C \oplus D$. Stage 1 uses Ch (Conditional), and Stage 3 uses Maj (Majority).</div>
+            </div>
+
+            <!-- ── SECTION C: Security Properties ── -->
+            <div class="quiz-section-header">Section C — Security Properties &amp; Avalanche Effect</div>
+
+            <div class="quiz-question-card" data-q="11" data-correct="a">
+              <h4>11. In an ideal hash function, approximately what fraction of output bits change when one input bit is flipped?</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q11" value="a"> ~50% (each bit flips with probability 0.5)</label>
+                <label class="quiz-option-label"><input type="radio" name="q11" value="b"> 100% (all bits always flip)</label>
+                <label class="quiz-option-label"><input type="radio" name="q11" value="c"> Exactly 1 bit (the corresponding output bit)</label>
+                <label class="quiz-option-label"><input type="radio" name="q11" value="d"> 0% (the hash is unchanged)</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q11"><strong>Explanation:</strong> The Strict Avalanche Criterion (SAC) requires each output bit to flip with probability 0.5 per input-bit change, yielding ~50% diffusion across all 160 output bits.</div>
+            </div>
+
+            <div class="quiz-question-card" data-q="12" data-correct="d">
+              <h4>12. Second pre-image resistance ensures that given a message $m_1$, it is infeasible to find $m_2 \neq m_1$ such that:</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q12" value="a"> $m_1 = m_2$</label>
+                <label class="quiz-option-label"><input type="radio" name="q12" value="b"> $H(m_1) \neq H(m_2)$</label>
+                <label class="quiz-option-label"><input type="radio" name="q12" value="c"> $|H(m_1)| = |H(m_2)|$</label>
+                <label class="quiz-option-label"><input type="radio" name="q12" value="d"> $H(m_1) = H(m_2)$</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q12"><strong>Explanation:</strong> Second pre-image resistance prevents finding a different message that hashes to the same value as a specific known message. This is distinct from collision resistance, where both messages can be freely chosen.</div>
+            </div>
+
+            <div class="quiz-question-card" data-q="13" data-correct="b">
+              <h4>13. Which of the following best describes strong collision resistance (collision resistance)?</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q13" value="a"> Given $h$, find any $m$ with $H(m) = h$</label>
+                <label class="quiz-option-label"><input type="radio" name="q13" value="b"> Find any two distinct messages $m_1 \neq m_2$ with $H(m_1) = H(m_2)$</label>
+                <label class="quiz-option-label"><input type="radio" name="q13" value="c"> Given $m_1$, find $m_2 \neq m_1$ with $H(m_1) = H(m_2)$</label>
+                <label class="quiz-option-label"><input type="radio" name="q13" value="d"> Ensure $|H(m)|$ is always 160 bits</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q13"><strong>Explanation:</strong> (Strong) Collision resistance: no adversary can efficiently find any pair $(m_1, m_2)$ with $m_1 \neq m_2$ and $H(m_1) = H(m_2)$. Both messages are freely chosen — this is harder to break than second pre-image resistance.</div>
+            </div>
+
+            <div class="quiz-question-card" data-q="14" data-correct="c">
+              <h4>14. How many bits does SHA-1 add to represent the original message length at the end of the padded block?</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q14" value="a"> 32 bits</label>
+                <label class="quiz-option-label"><input type="radio" name="q14" value="b"> 128 bits</label>
+                <label class="quiz-option-label"><input type="radio" name="q14" value="c"> 64 bits (big-endian)</label>
+                <label class="quiz-option-label"><input type="radio" name="q14" value="d"> 160 bits</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q14"><strong>Explanation:</strong> SHA-1 appends a 64-bit big-endian representation of the original message length in bits. Combined with the padding bits, this makes the total padded length a multiple of 512.</div>
+            </div>
+
+            <!-- ── SECTION D: Cryptanalysis & Comparison ── -->
+            <div class="quiz-section-header">Section D — Cryptanalysis &amp; Real-World Implications</div>
+
+            <div class="quiz-question-card" data-q="15" data-correct="c">
+              <h4>15. Why has SHA-1 been deprecated for digital signatures by NIST and major CAs?</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q15" value="a"> It is too slow for modern CPUs</label>
+                <label class="quiz-option-label"><input type="radio" name="q15" value="b"> Its output cannot be stored in databases</label>
+                <label class="quiz-option-label"><input type="radio" name="q15" value="c"> Practical collision attacks (SHAttered, 2017) broke collision resistance</label>
+                <label class="quiz-option-label"><input type="radio" name="q15" value="d"> Its padding scheme was proved incorrect</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q15"><strong>Explanation:</strong> Google and CWI Amsterdam (2017) published the SHAttered attack: two distinct PDF files with identical SHA-1 digests. This proves SHA-1 collision resistance is practically broken.</div>
+            </div>
+
+            <div class="quiz-question-card" data-q="16" data-correct="a">
+              <h4>16. Who first published theoretical collision vulnerabilities in SHA-1 in 2005?</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q16" value="a"> Wang, Yin, and Yu</label>
+                <label class="quiz-option-label"><input type="radio" name="q16" value="b"> Rivest, Shamir, and Adleman</label>
+                <label class="quiz-option-label"><input type="radio" name="q16" value="c"> Diffie and Hellman</label>
+                <label class="quiz-option-label"><input type="radio" name="q16" value="d"> Schneier and Ferguson</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q16"><strong>Explanation:</strong> Wang, Yin, and Yu published a landmark 2005 CRYPTO paper showing SHA-1 collisions could be found far more efficiently than the brute-force birthday-attack bound, accelerating its eventual deprecation.</div>
+            </div>
+
+            <div class="quiz-question-card" data-q="17" data-correct="b">
+              <h4>17. Which algorithm is recommended by NIST as the primary replacement for SHA-1 in digital signatures?</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q17" value="a"> MD5</label>
+                <label class="quiz-option-label"><input type="radio" name="q17" value="b"> SHA-256 (from the SHA-2 family)</label>
+                <label class="quiz-option-label"><input type="radio" name="q17" value="c"> SHA-1 with a longer key</label>
+                <label class="quiz-option-label"><input type="radio" name="q17" value="d"> CRC-32</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q17"><strong>Explanation:</strong> NIST recommends SHA-2 (primarily SHA-256 or SHA-384) and SHA-3 as replacements for SHA-1 in security-critical applications. MD5 is also deprecated.</div>
+            </div>
+
+            <div class="quiz-question-card" data-q="18" data-correct="d">
+              <h4>18. SHA-1's constant $K_t = \texttt{0x5A827999}$ is used in which stage?</h4>
+              <div class="quiz-options">
+                <label class="quiz-option-label"><input type="radio" name="q18" value="a"> Rounds 20–39</label>
+                <label class="quiz-option-label"><input type="radio" name="q18" value="b"> Rounds 40–59</label>
+                <label class="quiz-option-label"><input type="radio" name="q18" value="c"> Rounds 60–79</label>
+                <label class="quiz-option-label"><input type="radio" name="q18" value="d"> Rounds 0–19</label>
+              </div>
+              <div class="quiz-explanation" id="exp-q18"><strong>Explanation:</strong> $K_t = \texttt{0x5A827999}$ (which equals $\lfloor 2^{30} \sqrt{2} \rfloor$) is the additive constant for Stage 1 (rounds 0–19), which uses the Conditional (Ch) function.</div>
+            </div>
+
+          </div><!-- /quiz-container -->
 
           <div class="actions">
             <button class="btn btn-primary" id="btn-submit-quiz" type="button">Submit Quiz</button>

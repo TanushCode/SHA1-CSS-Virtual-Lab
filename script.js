@@ -251,6 +251,11 @@ function selectPane(targetId) {
     link.setAttribute("aria-selected", String(isActive));
   });
   document.querySelector("#page-indicator").textContent = `${targetPane.dataset.index} / ${document.querySelectorAll(".section-pane").length}`;
+
+  // Re-typeset math expressions in the newly visible pane
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    window.MathJax.typesetPromise([targetPane]).catch(() => {});
+  }
 }
 
 function selectSimulationTab(tabName) {
@@ -427,3 +432,63 @@ async function runKnownVectorTests() {
 bindEvents();
 updateCharacterCount();
 runKnownVectorTests().catch(() => setStatus(elements.hashStatus, "SHA-1 self-check failed. Please reload the experiment."));
+
+// ── Interactive Stepper Logic ────────────────────────────────────────────────
+function openStepperItem(item) {
+  const body = document.querySelector(`#${item.querySelector(".stepper-header").getAttribute("aria-controls")}`);
+  if (!body) return;
+  item.classList.add("open");
+  item.querySelector(".stepper-header").setAttribute("aria-expanded", "true");
+  body.hidden = false;
+}
+
+function closeStepperItem(item) {
+  const body = document.querySelector(`#${item.querySelector(".stepper-header").getAttribute("aria-controls")}`);
+  if (!body) return;
+  item.classList.remove("open");
+  item.querySelector(".stepper-header").setAttribute("aria-expanded", "false");
+  body.hidden = true;
+}
+
+function initSteppers() {
+  document.querySelectorAll(".stepper").forEach(stepper => {
+
+    // Toggle on header click
+    stepper.querySelectorAll(".stepper-header").forEach(header => {
+      header.addEventListener("click", () => {
+        const item = header.closest(".stepper-item");
+        if (item.classList.contains("open")) {
+          closeStepperItem(item);
+        } else {
+          openStepperItem(item);
+        }
+      });
+    });
+
+    // "Next Step" buttons
+    stepper.querySelectorAll("[data-step-next]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const currentItem = btn.closest(".stepper-item");
+        const allItems = [...stepper.querySelectorAll(".stepper-item")];
+        const currentIndex = allItems.indexOf(currentItem);
+
+        // Mark current step as done and close it
+        currentItem.classList.add("done");
+        closeStepperItem(currentItem);
+
+        // Open the next step if it exists
+        if (currentIndex + 1 < allItems.length) {
+          openStepperItem(allItems[currentIndex + 1]);
+          allItems[currentIndex + 1].querySelector(".stepper-header").scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      });
+    });
+
+    // Open step 1 by default
+    const firstItem = stepper.querySelector(".stepper-item");
+    if (firstItem) openStepperItem(firstItem);
+  });
+}
+
+initSteppers();
+
