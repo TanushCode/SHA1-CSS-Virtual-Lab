@@ -1,1165 +1,213 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Virtual Cryptography Laboratory - SHA-1 Hash Algorithm and Sensitivity Interactive Simulation">
-  <title>Virtual Cryptography Lab | SHA-1 Hash Algorithm</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHA-1 Secure Hash Algorithm - Fr. CRCE Virtual Cryptography Lab</title>
   <link rel="stylesheet" href="style.css">
-  <!-- MathJax: renders inline $...$ and display $$...$$ LaTeX math expressions -->
-  <script>
-    MathJax = {
-      tex: {
-        inlineMath: [['$', '$']],
-        displayMath: [['$$', '$$']],
-        processEscapes: true
-      },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-      }
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
 </head>
 <body>
+  <div class="lab-experiment-container">
 
-  <!-- Top Header (Educational Lab Manual Theme) -->
-  <header class="site-header">
-    <div class="header-container">
-      <div class="header-left">
-        <button class="back-btn" id="btn-back" type="button" title="Back to Virtual Lab Home" aria-label="Go back">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-        </button>
-        <div class="header-titles">
-          <h1>Computer Science Lab Manual</h1>
-          <div class="subtitle">
-            <span>• Cryptography & System Security</span>
-            <span>• Experiment 09</span>
-            <span>• SHA-1 Hash Algorithm</span>
-          </div>
-        </div>
-      </div>
-      <div class="header-right">
-        <button class="share-btn" id="btn-share" type="button">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="18" cy="5" r="3"></circle>
-            <circle cx="6" cy="12" r="3"></circle>
-            <circle cx="18" cy="19" r="3"></circle>
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-          </svg>
-          Share
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Interactive Toolbar / Utility Bar -->
-  <nav class="toolbar" aria-label="Lab navigation and accessibility controls">
-    <div class="toolbar-container">
-      <div class="toolbar-controls">
-        <button class="menu-toggle-btn" id="btn-menu-toggle" type="button" aria-label="Toggle resources menu">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-        <button class="read-aloud-btn" id="btn-read-aloud" type="button" aria-label="Read text aloud">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-          <span id="read-aloud-text">Read Aloud</span>
-        </button>
-
-        <select class="control-select" id="select-speech-speed" aria-label="Speech speed">
-          <option value="0.85">Speed 0.85x</option>
-          <option value="1" selected>Speed 1x</option>
-          <option value="1.25">Speed 1.25x</option>
-          <option value="1.5">Speed 1.5x</option>
-        </select>
-
-        <select class="control-select" id="select-speech-voice" aria-label="Voice selection">
-          <option value="auto">Voice: Auto</option>
-        </select>
-
-        <button class="icon-btn" id="btn-reset-view" type="button" title="Reset view and simulation" aria-label="Reset simulation">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M23 4v6h-6"></path>
-            <path d="M1 20v-6h6"></path>
-            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-          </svg>
-        </button>
-
-        <button class="icon-btn" id="btn-font-decrease" type="button" title="Decrease font size" aria-label="Decrease font size">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-        </button>
-        <button class="icon-btn" id="btn-font-increase" type="button" title="Increase font size" aria-label="Increase font size">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-        </button>
-
-        <span class="pagination-display" id="page-indicator">1 / 7</span>
-
-        <button class="icon-btn" id="btn-prev-page" type="button" title="Previous section" aria-label="Previous section">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-        </button>
-        <button class="icon-btn" id="btn-next-page" type="button" title="Next section" aria-label="Next section">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </button>
-      </div>
-
-      <div class="filter-tabs" role="tablist" aria-label="Resource filter">
-        <button class="filter-pill active" data-filter="all" type="button">All</button>
-        <button class="filter-pill" data-filter="theory" type="button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-          </svg>
-          Theory
-        </button>
-        <button class="filter-pill" data-filter="interactive" type="button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-          </svg>
-          Interactive
-        </button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Main Laboratory Workspace -->
-  <main class="lab-layout">
-    
-    <!-- Left Column: Dynamic Content Panes -->
-    <article class="content-area" id="content-container">
-
-      <!-- ==========================================
-           1. AIM & OBJECTIVES PANE
-           ========================================== -->
-      <section class="section-pane active content-pane" id="pane-aim" data-index="1" data-category="theory" aria-labelledby="heading-aim">
-        <span class="section-badge">Experiment Overview</span>
-        <h2 id="heading-aim">Aim & Objectives</h2>
-        <p class="lead-p">Study the fundamental mechanics of cryptographic hashing through the Secure Hash Algorithm 1 (SHA-1).</p>
-        
-        <div class="callout-box info">
-          <div class="callout-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-            Experiment Title
-          </div>
-          <p><strong>SHA-1:</strong> Generate the SHA-1 hash value for a given input message and study its output characteristics and sensitivity to input changes.</p>
-        </div>
-
-        <h3>Primary Aim</h3>
-        <p>To implement, analyze, and simulate the 160-bit SHA-1 cryptographic hash algorithm, validating its deterministic properties, fixed output length, message compression pipeline, and the avalanche effect when input data undergoes slight mutations.</p>
-
-        <h3>Educational Objectives</h3>
-        <div class="objectives-grid">
-          <div class="objective-card">
-            <h4>1. Mathematical Foundations</h4>
-            <p>Understand the pre-processing padding scheme, 512-bit block partitioning, and 64-bit length appending.</p>
-          </div>
-          <div class="objective-card">
-            <h4>2. Iterative Compression</h4>
-            <p>Trace the 80 rounds of logical functions, constant additions, circular left-shifts, and working register updates ($A, B, C, D, E$).</p>
-          </div>
-          <div class="objective-card">
-            <h4>3. Output Determinism</h4>
-            <p>Generate exact 160-bit (40 hexadecimal characters) message digests across various message lengths.</p>
-          </div>
-          <div class="objective-card">
-            <h4>4. Avalanche Effect Analysis</h4>
-            <p>Quantify output bit variance (target ~50%) when a single character or bit in the input message is modified.</p>
-          </div>
-        </div>
-
-        <h3>Course & Laboratory Details</h3>
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Parameter</th>
-              <th>Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Course</td>
-              <td>Cryptography & System Security (CSS) — Third Year Computer Engineering</td>
-            </tr>
-            <tr>
-              <td>Experiment Number</td>
-              <td>Experiment 09</td>
-            </tr>
-            <tr>
-              <td>Algorithm Standard</td>
-              <td>NIST FIPS PUB 180-1 / RFC 3174</td>
-            </tr>
-            <tr>
-              <td>Development Team</td>
-              <td>Swar (UI/Frontend), Tanush Chavan (SHA-1 Core), Aaron Deniz (Interactive Simulation), Asher (Sensitivity Test)</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-      <!-- ==========================================
-           2. THEORY PANE
-           ========================================== -->
-      <section class="section-pane content-pane" id="pane-theory" data-index="2" data-category="theory" aria-labelledby="heading-theory">
-        <span class="section-badge">Cryptographic Principles</span>
-        <h2 id="heading-theory">Theory: SHA-1 Hash Algorithm</h2>
-        <p class="lead-p">The Secure Hash Algorithm 1 (SHA-1) is a cryptographic hash function designed by the United States National Security Agency (NSA) and published as a U.S. Federal Information Processing Standard (FIPS PUB 180-1) in 1995.</p>
-
-        <h3>1. Essential Properties of Cryptographic Hash Functions</h3>
-        <p>A secure cryptographic hash function takes an arbitrary-length message $M$ and produces a fixed-length digest $H(M)$. It must satisfy three core security properties:</p>
+    <section id="objective" class="lab-section">
+      <span class="lab-section-tag">Section 1</span>
+      <h1 class="lab-section-title">SHA-1 Secure Hash Algorithm</h1>
+      <div class="lab-prose">
+        <p>SHA-1 (Secure Hash Algorithm 1) maps a message of any length to a fixed 160-bit digest, written as 40 hexadecimal characters. It was published by NIST in FIPS 180-1 and is built on the Merkle-Damgard construction with a 512-bit compression function.</p>
+        <p>In this experiment you will:</p>
         <ul>
-          <li><strong>Pre-image Resistance (One-Way):</strong> Given a digest $h$, it is computationally infeasible to find any message $m$ such that $H(m) = h$.</li>
-          <li><strong>Second Pre-image Resistance (Weak Collision Resistance):</strong> Given an input $m_1$, it is computationally infeasible to find a different input $m_2 \neq m_1$ such that $H(m_1) = H(m_2)$.</li>
-          <li><strong>Collision Resistance (Strong Collision Resistance):</strong> It is computationally infeasible to find any two distinct messages $m_1 \neq m_2$ such that $H(m_1) = H(m_2)$.</li>
+          <li>Generate SHA-1 digests live for any input message and verify them against known test vectors.</li>
+          <li>Follow the RFC 3174 padding rule: the 0x80 byte, zero fill, and the 64-bit big-endian length.</li>
+          <li>Observe the expansion of a 512-bit block into 80 words and the 80 compression steps in four rounds.</li>
+          <li>Measure the avalanche effect by flipping a single bit of the input and counting the changed digest bits.</li>
+          <li>Understand why SHA-1 is now considered cryptographically broken for collision resistance.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="theory" class="lab-section">
+      <span class="lab-section-tag">Section 2</span>
+      <h2 class="lab-section-title">Theory</h2>
+      <div class="lab-prose">
+        <h3>Properties of a cryptographic hash</h3>
+        <p>A hash function H should be fast to compute, one-way (preimage resistant), hard to make a second input with the same digest (second-preimage resistant), and hard to find any two inputs with the same digest (collision resistant). A small change in the input should change about half of the output bits (the avalanche effect).</p>
+
+        <h3>Parameters</h3>
+        <ul>
+          <li>Digest size: 160 bits (five 32-bit words).</li>
+          <li>Block size: 512 bits (sixteen 32-bit words).</li>
+          <li>Message limit: less than 2^64 bits.</li>
+          <li>Rounds: 4 rounds of 20 steps each, 80 steps in total.</li>
         </ul>
 
-        <h3>2. SHA-1 Algorithm Specifications</h3>
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Parameter</th>
-              <th>Specification</th>
-            </tr>
-          </thead>
+        <h3>Step 1: Padding</h3>
+        <p>Append a single 1 bit (the byte 0x80), then as many 0 bits as needed so that the length is 448 mod 512, then append the original message length in bits as a 64-bit big-endian integer. The padded message is always a multiple of 512 bits.</p>
+
+        <h3>Step 2: Initial hash value</h3>
+        <pre class="lab-code">H0 = 67452301
+H1 = EFCDAB89
+H2 = 98BADCFE
+H3 = 10325476
+H4 = C3D2E1F0</pre>
+
+        <h3>Step 3: Message schedule</h3>
+        <p>Each 512-bit block is split into W[0] to W[15] (big-endian). The remaining words are:</p>
+        <pre class="lab-code">W[t] = ROTL1( W[t-3] XOR W[t-8] XOR W[t-14] XOR W[t-16] ),  16 &lt;= t &lt;= 79</pre>
+
+        <h3>Step 4: Compression (80 steps)</h3>
+        <p>Initialise a, b, c, d, e with H0 to H4, then for t = 0 to 79:</p>
+        <pre class="lab-code">TEMP = ROTL5(a) + f(t, b, c, d) + e + K(t) + W[t]   (mod 2^32)
+e = d
+d = c
+c = ROTL30(b)
+b = a
+a = TEMP</pre>
+
+        <table class="lab-table">
+          <thead><tr><th>Steps</th><th>Function f</th><th>Name</th><th>Constant K</th></tr></thead>
           <tbody>
-            <tr>
-              <td>Digest Size (Output Length)</td>
-              <td><strong>160 bits</strong> (20 bytes, represented as 40 hexadecimal characters)</td>
-            </tr>
-            <tr>
-              <td>Input Block Size</td>
-              <td><strong>512 bits</strong> (16 words of 32 bits each)</td>
-            </tr>
-            <tr>
-              <td>Word Size</td>
-              <td>32 bits</td>
-            </tr>
-            <tr>
-              <td>Maximum Input Message Size</td>
-              <td>$2^{64} - 1$ bits</td>
-            </tr>
-            <tr>
-              <td>Total Processing Rounds</td>
-              <td><strong>80 rounds</strong> (organized into 4 logical stages of 20 rounds each)</td>
-            </tr>
-            <tr>
-              <td>Initial Register State Variables</td>
-              <td>5 registers: $A, B, C, D, E$ (each 32 bits, total 160 bits)</td>
-            </tr>
+            <tr><td>0 - 19</td><td>(b AND c) OR (NOT b AND d)</td><td>Ch</td><td>5A827999</td></tr>
+            <tr><td>20 - 39</td><td>b XOR c XOR d</td><td>Parity</td><td>6ED9EBA1</td></tr>
+            <tr><td>40 - 59</td><td>(b AND c) OR (b AND d) OR (c AND d)</td><td>Maj</td><td>8F1BBCDC</td></tr>
+            <tr><td>60 - 79</td><td>b XOR c XOR d</td><td>Parity</td><td>CA62C1D6</td></tr>
           </tbody>
         </table>
 
-        <h3>3. Step-by-Step Processing Pipeline</h3>
-        
-        <h4>Step 1: Message Padding</h4>
-        <p>The input message is padded so that its total bit length is congruent to <strong>448 modulo 512</strong> ($L \equiv 448 \pmod{512}$). Padding is always performed, even if the message already has the desired length.</p>
-        <div class="formula-block">
-          1. Append a single '1' bit to the end of the message.<br>
-          2. Append $k$ zero bits ('0'), where $k$ is the smallest non-negative integer satisfying:<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;$(L + 1 + k) \equiv 448 \pmod{512}$
+        <h3>Step 5: Chaining</h3>
+        <p>After the 80 steps, add a to e into H0 to H4 (mod 2^32). The next block starts from the updated H values. The final digest is H0 || H1 || H2 || H3 || H4.</p>
+
+        <h3>Security status</h3>
+        <p>Wang, Yin and Yu (2005) showed collisions in SHA-1 faster than brute force (2^69 operations). In 2017 the SHAttered attack produced the first practical collision. Modern systems should use SHA-256 or SHA-3 for digital signatures and certificates; SHA-1 survives only in legacy and non-security uses.</p>
+      </div>
+    </section>
+
+    <section id="procedure" class="lab-section">
+      <span class="lab-section-tag">Section 3</span>
+      <h2 class="lab-section-title">Procedure</h2>
+      <div class="lab-prose">
+        <ol>
+          <li>Open the Simulation tab. In the Digest view, keep the default input <code>abc</code> and check that the digest equals a9993e364706816aba3e25717850c26c9cd0d89d. The self-check panel should show both test vectors as passed.</li>
+          <li>Type your own message and watch the digest, input bit count and block count update at once.</li>
+          <li>Switch to the Padding view. Note the message bytes, the 0x80 byte, the zero fill and the 64-bit length. Try a message of 55, 56 and 64 characters and observe when a second block is added.</li>
+          <li>Open the Schedule view and read W[0] to W[15] taken from the block, then the expanded words W[16] to W[79].</li>
+          <li>Open the Rounds view. Record the a, b, c, d, e registers at the end of each round and use the step slider to inspect any single step t, with its function f, constant K and word W[t].</li>
+          <li>Open the Avalanche view. Use Flip last bit or edit the modified message, and record the number of changed bits and the percentage. Repeat for three different edits.</li>
+          <li>Compare your observations with the expected value of about 80 changed bits out of 160 (50 percent).</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="simulation" class="lab-section">
+      <span class="lab-section-tag">Section 4 &bull; Interactive Simulation</span>
+      <h2 class="lab-section-title">SHA-1 Interactive Simulator</h2>
+      <div class="lab-sim-card">
+        <div class="lab-sim-views" role="tablist" aria-label="Simulator views">
+          <button type="button" class="lab-sim-viewbtn active" data-view="digest">Digest</button>
+          <button type="button" class="lab-sim-viewbtn" data-view="padding">Padding</button>
+          <button type="button" class="lab-sim-viewbtn" data-view="schedule">Schedule</button>
+          <button type="button" class="lab-sim-viewbtn" data-view="rounds">Rounds</button>
+          <button type="button" class="lab-sim-viewbtn" data-view="avalanche">Avalanche</button>
         </div>
 
-        <h4>Step 2: Appending 64-Bit Length</h4>
-        <p>A 64-bit unsigned integer representing the original message length $L$ (in bits) is appended to the padded message. This produces a complete padded message whose length is an exact multiple of 512 bits ($n \times 512$).</p>
-
-        <h4>Step 3: Initializing Working Registers</h4>
-        <p>A 160-bit buffer composed of five 32-bit registers $(A, B, C, D, E)$ is initialized with standard hexadecimal constants:</p>
-        <div class="formula-block">
-          A = 0x67452301<br>
-          B = 0xEFCDAB89<br>
-          C = 0x98BADCFE<br>
-          D = 0x10325476<br>
-          E = 0xC3D2E1F0
+        <label class="lab-field-label" for="sim-input">Input message</label>
+        <input id="sim-input" class="lab-input" type="text" value="abc" maxlength="200" autocomplete="off" placeholder="Type anything to observe real-time hash state...">
+        <div class="lab-actions">
+          <button type="button" class="lab-btn" id="sim-reset">Reset</button>
         </div>
 
-        <h4>Step 4: Message Schedule Expansion</h4>
-        <p>Each 512-bit block is divided into sixteen 32-bit words $W_0, W_1, \dots, W_{15}$. These are expanded into eighty 32-bit words $W_{16}, \dots, W_{79}$ using bitwise XOR and circular left-shift:</p>
-        <div class="formula-block">
-          For t = 16 to 79:<br>
-          W[t] = ROTL^1 ( W[t-3] ⊕ W[t-8] ⊕ W[t-14] ⊕ W[t-16] )
+        <div class="lab-sim-view active" data-viewpanel="digest">
+          <div class="lab-digest-label">160-bit resulting hash (hexadecimal)</div>
+          <div class="lab-digest" id="sim-digest"></div>
+          <div class="lab-stat-grid">
+            <div class="lab-stat"><span>Input bits</span><p id="sim-bits"></p></div>
+            <div class="lab-stat"><span>512-bit blocks</span><p id="sim-blocks"></p></div>
+            <div class="lab-stat"><span>Security status</span><p class="lab-danger">Deprecated (collision attacks, SHAttered)</p></div>
+          </div>
+          <div class="lab-digest-label lab-gap">Self-check against known test vectors</div>
+          <div class="lab-terminal" id="sim-selfcheck"></div>
         </div>
 
-        <h4>Step 5: 80 Rounds of Iterative Compression</h4>
-        <p>The 80 rounds are divided into 4 stages of 20 rounds each. Each stage uses a distinct non-linear logical function $f_t$ and additive constant $K_t$:</p>
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Stage</th>
-              <th>Rounds ($t$)</th>
-              <th>Non-linear Function $f_t(B, C, D)$</th>
-              <th>Constant $K_t$ (Hex)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Stage 1</td>
-              <td>0 – 19</td>
-              <td>$(B \land C) \lor (\neg B \land D)$ (Ch / Conditional)</td>
-              <td><code>0x5A827999</code></td>
-            </tr>
-            <tr>
-              <td>Stage 2</td>
-              <td>20 – 39</td>
-              <td>$B \oplus C \oplus D$ (Parity)</td>
-              <td><code>0x6ED9EBA1</code></td>
-            </tr>
-            <tr>
-              <td>Stage 3</td>
-              <td>40 – 59</td>
-              <td>$(B \land C) \lor (B \land D) \lor (C \land D)$ (Maj / Majority)</td>
-              <td><code>0x8F1BBCDC</code></td>
-            </tr>
-            <tr>
-              <td>Stage 4</td>
-              <td>60 – 79</td>
-              <td>$B \oplus C \oplus D$ (Parity)</td>
-              <td><code>0xCA62C1D6</code></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="formula-block">
-          For each round t from 0 to 79:<br>
-          TEMP = ROTL^5(A) + f_t(B, C, D) + E + W_t + K_t<br>
-          E = D<br>
-          D = C<br>
-          C = ROTL^30(B)<br>
-          B = A<br>
-          A = TEMP
+        <div class="lab-sim-view" data-viewpanel="padding">
+          <p class="lab-note">RFC 3174: append the byte 0x80, then zero bytes until the length is 56 mod 64, then the 64-bit big-endian message length in bits.</p>
+          <div class="lab-legend">
+            <span class="lab-chip lab-b-msg">Message</span>
+            <span class="lab-chip lab-b-one">0x80</span>
+            <span class="lab-chip lab-b-zero">Zero fill</span>
+            <span class="lab-chip lab-b-len">Length</span>
+          </div>
+          <div class="lab-terminal" id="sim-padding"></div>
+          <div class="lab-bytes" id="sim-padbytes"></div>
         </div>
 
-        <h4>Step 6: Producing the 160-Bit Digest</h4>
-        <p>After all 80 rounds, the working registers are added modulo $2^{32}$ to the previous hash block chaining variables. The final output is formed by concatenating $A, B, C, D, E$ into a 40-character hexadecimal string.</p>
-
-        <h3>4. The Avalanche Effect</h3>
-        <p>A critical characteristic of any robust cryptographic hash function is the <strong>Avalanche Effect</strong>: a minute change in the input (such as flipping a single bit or changing a character case) causes an unpredictable and widespread change in the output digest.</p>
-        <div class="callout-box warning">
-          <div class="callout-title">Ideal Cryptographic Avalanche Target</div>
-          <p>Theoretically, in a well-designed hash function, changing 1 bit of the input should cause each bit of the output to flip with a probability of 0.5. Thus, approximately <strong>50% (80 out of 160 bits)</strong> of the output digest should change.</p>
-        </div>
-
-        <h3>5. Current Cryptanalytic Status</h3>
-        <p>In 2005, researchers (Wang et al.) discovered theoretical collision vulnerabilities in SHA-1. In 2017, researchers from CWI Amsterdam and Google announced the <strong>SHAttered</strong> attack, generating the first real-world collision (two distinct PDF files producing the same SHA-1 hash). As a result, industry standards (NIST, IETF) have deprecated SHA-1 for digital signatures in favor of <strong>SHA-256</strong> and <strong>SHA-3</strong>.</p>
-      </section>
-
-      <!-- ==========================================
-           3. PROCEDURE PANE
-           ========================================== -->
-      <section class="section-pane content-pane" id="pane-procedure" data-index="3" data-category="theory" aria-labelledby="heading-procedure">
-        <span class="section-badge">Laboratory Guidelines</span>
-        <h2 id="heading-procedure">Experiment Procedure</h2>
-        <p class="lead-p">Click each step below to walk through the procedure one stage at a time.</p>
-
-        <h3>Real Laboratory Procedure</h3>
-        <div class="stepper" id="stepper-real" role="list">
-
-          <div class="stepper-item" data-step="1" role="listitem">
-            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="real-step-body-1">
-              <span class="stepper-num">1</span>
-              <span class="stepper-title">Input Selection &amp; ASCII Conversion</span>
-              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div class="stepper-body" id="real-step-body-1" hidden>
-              <p>Choose an alphanumeric input string $M$. Convert each ASCII character into its 8-bit binary representation to compute the initial bit length $L$.</p>
-              <div class="step-tip">&#x1F4A1; <strong>Example:</strong> For the message <code>abc</code>, $L = 3 \times 8 = 24$ bits.</div>
-              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-real">Next Step &#x2192;</button></div>
-            </div>
+        <div class="lab-sim-view" data-viewpanel="schedule">
+          <div class="lab-row">
+            <label class="lab-field-label" for="sim-sched-block">Block</label>
+            <select id="sim-sched-block" class="lab-input lab-small"></select>
           </div>
-
-          <div class="stepper-item" data-step="2" role="listitem">
-            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="real-step-body-2">
-              <span class="stepper-num">2</span>
-              <span class="stepper-title">Padding &amp; Length Block Construction</span>
-              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div class="stepper-body" id="real-step-body-2" hidden>
-              <p>Append a single <code>1</code> bit, followed by enough <code>0</code> bits so that the total length satisfies $(L + 1 + k) \equiv 448 \pmod{512}$. Then append the original length $L$ as a 64-bit big-endian integer.</p>
-              <div class="step-tip">&#x1F4A1; Padding is always performed &#x2014; even if the message is already the right length &#x2014; to ensure the standard is consistently applied.</div>
-              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-real">Next Step &#x2192;</button></div>
-            </div>
-          </div>
-
-          <div class="stepper-item" data-step="3" role="listitem">
-            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="real-step-body-3">
-              <span class="stepper-num">3</span>
-              <span class="stepper-title">Register Initialization &amp; Round Execution</span>
-              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div class="stepper-body" id="real-step-body-3" hidden>
-              <p>Initialize the 5 working registers $(A, B, C, D, E)$ with the standard SHA-1 IV constants. For each 512-bit block, execute all 80 rounds of compression, updating registers each round.</p>
-              <div class="formula-block" style="margin-top:10px;font-size:0.88rem">
-                A=0x67452301 &nbsp; B=0xEFCDAB89 &nbsp; C=0x98BADCFE &nbsp; D=0x10325476 &nbsp; E=0xC3D2E1F0
-              </div>
-              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-real">Next Step &#x2192;</button></div>
-            </div>
-          </div>
-
-          <div class="stepper-item" data-step="4" role="listitem">
-            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="real-step-body-4">
-              <span class="stepper-num">4</span>
-              <span class="stepper-title">Sensitivity / Mutation Test</span>
-              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div class="stepper-body" id="real-step-body-4" hidden>
-              <p>Introduce a minimal change in the original input &#x2014; flipping a single bit, changing case, or swapping one character. Compute the new 160-bit SHA-1 digest for the mutated message.</p>
-              <div class="step-tip">&#x1F4A1; Even one character change should produce a completely different digest &#x2014; this is the <strong>Avalanche Effect</strong>.</div>
-              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-real">Next Step &#x2192;</button></div>
-            </div>
-          </div>
-
-          <div class="stepper-item" data-step="5" role="listitem">
-            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="real-step-body-5">
-              <span class="stepper-num">5</span>
-              <span class="stepper-title">Bitwise Variance Calculation</span>
-              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div class="stepper-body" id="real-step-body-5" hidden>
-              <p>Convert both 40-character hex digests into 160-bit binary strings. XOR them bit-by-bit and count the differing positions. Compute the percentage:</p>
-              <div class="formula-block" style="margin-top:8px">Percentage Difference = (Changed Bits / 160) &#xD7; 100%</div>
-              <div class="step-tip">&#x1F3AF; A well-designed hash function should yield ~50% difference (~80 out of 160 bits changed).</div>
-              <div class="stepper-complete">&#x2705; Real Lab Procedure Complete!</div>
-            </div>
-          </div>
-
-        </div><!-- /stepper-real -->
-
-        <h3 style="margin-top:2rem">Virtual Laboratory Procedure</h3>
-        <div class="stepper" id="stepper-virtual" role="list">
-
-          <div class="stepper-item" data-step="1" role="listitem">
-            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="virt-step-body-1">
-              <span class="stepper-num">1</span>
-              <span class="stepper-title">Open the Simulation Tab</span>
-              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div class="stepper-body" id="virt-step-body-1" hidden>
-              <p>Click <strong>Interactive Simulation</strong> in the right-hand <em>Explanation Resources</em> panel, or press the <strong>Next Page</strong> arrow in the toolbar until you reach Section 4.</p>
-              <div class="step-tip">&#x1F4A1; You can also use the <strong>Interactive</strong> filter pill in the toolbar to quickly find simulation panes.</div>
-              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-virtual">Next Step &#x2192;</button></div>
-            </div>
-          </div>
-
-          <div class="stepper-item" data-step="2" role="listitem">
-            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="virt-step-body-2">
-              <span class="stepper-num">2</span>
-              <span class="stepper-title">Generate a SHA-1 Hash</span>
-              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div class="stepper-body" id="virt-step-body-2" hidden>
-              <p>In the <strong>Hash Generator</strong> sub-tab, type any message into the <em>Input Message</em> box. Observe the real-time character counter, then click <strong>Generate SHA-1 Hash</strong>.</p>
-              <div class="step-tip">&#x1F4A1; Try messages of very different lengths (e.g., <code>a</code> vs. a full sentence) and note the digest is always exactly 40 hex characters.</div>
-              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-virtual">Next Step &#x2192;</button></div>
-            </div>
-          </div>
-
-          <div class="stepper-item" data-step="3" role="listitem">
-            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="virt-step-body-3">
-              <span class="stepper-num">3</span>
-              <span class="stepper-title">Inspect the Padding</span>
-              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div class="stepper-body" id="virt-step-body-3" hidden>
-              <p>Switch to the <strong>Message Padding Inspector</strong> sub-tab. Enter a short string (e.g., <code>abc</code>) and click <strong>Inspect SHA-1 Padding</strong> to see how the 512-bit padded block is constructed.</p>
-              <div class="step-tip">&#x1F4A1; Observe how the original bytes, the appended <code>1</code> bit, the zero-padding, and the 64-bit length field fill exactly one 512-bit block.</div>
-              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-virtual">Next Step &#x2192;</button></div>
-            </div>
-          </div>
-
-          <div class="stepper-item" data-step="4" role="listitem">
-            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="virt-step-body-4">
-              <span class="stepper-num">4</span>
-              <span class="stepper-title">Run the Sensitivity Test</span>
-              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div class="stepper-body" id="virt-step-body-4" hidden>
-              <p>Switch to <strong>Sensitivity &amp; Avalanche Analysis</strong>. Enter an original message, then use one of the <em>Quick Presets</em> (Change Case, Add Character, Remove Character, Change One Character) or type a modified version manually.</p>
-              <div class="stepper-nav"><button class="btn btn-primary btn-sm" type="button" data-step-next="stepper-virtual">Next Step &#x2192;</button></div>
-            </div>
-          </div>
-
-          <div class="stepper-item" data-step="5" role="listitem">
-            <button class="stepper-header" type="button" aria-expanded="false" aria-controls="virt-step-body-5">
-              <span class="stepper-num">5</span>
-              <span class="stepper-title">Compare &amp; Record Observations</span>
-              <svg class="stepper-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div class="stepper-body" id="virt-step-body-5" hidden>
-              <p>Click <strong>Compare Hashes (Sensitivity Test)</strong>. Examine the highlighted differences, the changed-bits count, the percentage bar, and the observation summary to confirm the Avalanche Effect.</p>
-              <div class="step-tip">&#x1F3AF; Record the % changed bits for each preset. Ideal result: ~50% bits changed per mutation.</div>
-              <div class="stepper-complete">&#x2705; Virtual Lab Procedure Complete!</div>
-            </div>
-          </div>
-
-        </div><!-- /stepper-virtual -->
-      </section>
-
-      <!-- ==========================================
-           4. SIMULATION PANE (AARON'S INTERACTIVE SIMULATION INTEGRATED)
-           ========================================== -->
-      <section class="section-pane" id="pane-simulation" data-index="4" data-category="interactive" aria-labelledby="heading-sim">
-        <span class="section-badge">Interactive Simulation</span>
-        <h2 id="heading-sim">SHA-1 Interactive Simulation</h2>
-        <p class="lead-p">Experiment with message digest calculation, examine output bit sensitivity, and inspect the avalanche effect in real time.</p>
-
-        <!-- Subtabs within simulation -->
-        <div class="sim-subtabs">
-          <button class="sim-subtab-btn active" data-subtab="hash-tab" type="button">Hash Generator</button>
-          <button class="sim-subtab-btn" data-subtab="sensitivity-tab" type="button">Sensitivity & Avalanche Analysis</button>
-          <button class="sim-subtab-btn" data-subtab="padding-tab" type="button">Message Padding Inspector</button>
-        </div>
-
-        <!-- Subpanel 1: Hash Generator -->
-        <div class="sim-subpanel active" id="subpanel-hash-tab">
-          <div class="field">
-            <label for="message-input">Input Message:</label>
-            <textarea id="message-input" placeholder="Type or paste any text to hash..." aria-describedby="character-count"></textarea>
-            <span class="count" id="character-count">Characters: 0</span>
-          </div>
-
-          <div class="actions">
-            <button class="btn btn-primary" id="generate-button" type="button">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-              Generate SHA-1 Hash
-            </button>
-            <button class="btn btn-secondary" id="clear-button" type="button">Clear</button>
-          </div>
-
-          <p class="status-msg" id="hash-status" role="status" aria-live="polite"></p>
-
-          <article class="result-card" id="hash-result" aria-live="polite">
-            <h3>SHA-1 Digest Result</h3>
-            <dl class="result-dl">
-              <dt>Input Message</dt>
-              <dd id="result-message"></dd>
-
-              <dt>Hexadecimal Digest</dt>
-              <dd>
-                <span class="hash-display" id="result-hash"></span>
-                <button class="copy-btn" id="btn-copy-hash" type="button" title="Copy to clipboard">Copy</button>
-              </dd>
-
-              <dt>Digest Length</dt>
-              <dd>160 bits (20 bytes)</dd>
-
-              <dt>Hex Character Count</dt>
-              <dd>40 characters (4 bits per character)</dd>
-
-              <dt>Deterministic Check</dt>
-              <dd>Consistent for identical inputs across all platforms</dd>
-            </dl>
-          </article>
-        </div>
-
-        <!-- Subpanel 2: Sensitivity & Avalanche Analysis -->
-        <div class="sim-subpanel" id="subpanel-sensitivity-tab">
-          <p style="margin-bottom: 14px; color: var(--text-secondary);">
-            Compare two messages at the bit level to observe how small modifications ripple through all 80 rounds of SHA-1.
-          </p>
-
-          <div class="comparison-grid">
-            <div class="field">
-              <label for="original-input">Original Message:</label>
-              <textarea id="original-input" placeholder="Enter original message (e.g. Hello World)"></textarea>
-            </div>
-            <div class="field">
-              <label for="modified-input">Modified Message:</label>
-              <textarea id="modified-input" placeholder="Enter modified message (e.g. hello World)"></textarea>
-            </div>
-          </div>
-
-          <div class="quick-tests-container" aria-label="Quick sensitivity presets">
-            <span style="font-size: 0.85rem; font-weight: 700; align-self: center; color: var(--text-secondary); margin-right: 4px;">Quick Presets:</span>
-            <button class="btn btn-quick" type="button" data-test="case">Change Case</button>
-            <button class="btn btn-quick" type="button" data-test="add">Add Character</button>
-            <button class="btn btn-quick" type="button" data-test="remove">Remove Character</button>
-            <button class="btn btn-quick" type="button" data-test="character">Change One Character</button>
-            <button class="btn btn-quick" type="button" data-test="reset">Reset</button>
-          </div>
-
-          <div class="actions">
-            <button class="btn btn-primary" id="compare-button" type="button">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-              Compare Hashes (Sensitivity Test)
-            </button>
-          </div>
-
-          <p class="status-msg" id="comparison-status" role="status" aria-live="polite"></p>
-
-          <article class="result-card" id="comparison-result" aria-live="polite">
-            <div class="comparison-grid">
-              <div class="hash-card">
-                <h4>Original Message Digest</h4>
-                <p class="msg-preview" id="comparison-original-message"></p>
-                <span class="hash-display" id="comparison-original-hash" style="font-size: 0.82rem;"></span>
-              </div>
-              <div class="hash-card">
-                <h4>Modified Message Digest</h4>
-                <p class="msg-preview" id="comparison-modified-message"></p>
-                <span class="hash-display" id="comparison-modified-hash" style="font-size: 0.82rem;"></span>
-              </div>
-            </div>
-
-            <div class="hash-diff-box" id="hash-difference" aria-label="Hexadecimal hash differences"></div>
-
-            <div class="metric-box">
-              <div class="metric-header">
-                <span id="changed-bits">Changed Bits: 0 / 160</span>
-                <span class="metric-percent" id="changed-percentage">0.00%</span>
-              </div>
-              <progress id="sensitivity-progress" max="100" value="0" aria-label="Percentage of changed bits"></progress>
-            </div>
-
-            <div class="observation-box" id="observation"></div>
-          </article>
-        </div>
-
-        <!-- Subpanel 3: Message Padding Inspector -->
-        <div class="sim-subpanel" id="subpanel-padding-tab">
-          <p style="margin-bottom: 14px; color: var(--text-secondary);">
-            Inspect how arbitrary text is converted to bytes, padded with '1' and '0' bits, and appended with its 64-bit length descriptor.
-          </p>
-
-          <div class="field">
-            <label for="inspector-input">Test String for Padding Inspection:</label>
-            <input type="text" class="form-control" id="inspector-input" value="abc" placeholder="Enter short text (e.g. abc)">
-          </div>
-
-          <div class="actions">
-            <button class="btn btn-primary" id="btn-inspect-padding" type="button">Inspect SHA-1 Padding</button>
-          </div>
-
-          <div class="result-card visible" id="padding-inspector-results" style="margin-top: 16px;">
-            <h4>Padding Breakdown (512-bit block)</h4>
-            <table class="data-table" style="margin-top: 12px;">
-              <tbody>
-                <tr>
-                  <td>Original Message</td>
-                  <td><code id="pad-orig-str">abc</code></td>
-                </tr>
-                <tr>
-                  <td>Original Length ($L$)</td>
-                  <td><span id="pad-orig-len">3 characters = 24 bits</span></td>
-                </tr>
-                <tr>
-                  <td>Padding Bit ('1' followed by $k$ zeros)</td>
-                  <td><span id="pad-k-zeros">1 bit '1' + 423 zero bits = 424 padding bits</span></td>
-                </tr>
-                <tr>
-                  <td>Length Field (64-bit big endian)</td>
-                  <td><span id="pad-len-field">0x0000000000000018 (24 in decimal)</span></td>
-                </tr>
-                <tr>
-                  <td>Total Padded Size</td>
-                  <td><strong>512 bits (1 block of 16 words)</strong></td>
-                </tr>
-              </tbody>
+          <p class="lab-note">W[0] to W[15] come straight from the block. W[16] to W[79] = ROTL1( W[t-3] XOR W[t-8] XOR W[t-14] XOR W[t-16] ).</p>
+          <div class="lab-table-wrap">
+            <table class="lab-table">
+              <thead><tr><th>t</th><th>W[t]</th><th>Source</th><th>t</th><th>W[t]</th><th>Source</th></tr></thead>
+              <tbody id="sim-schedule"></tbody>
             </table>
           </div>
         </div>
 
-      </section>
-
-      <!-- ==========================================
-           5. ASSESSMENT / QUIZ PANE
-           ========================================== -->
-      <section class="section-pane" id="pane-assessment" data-index="5" data-category="theory" aria-labelledby="heading-quiz">
-        <span class="section-badge">Knowledge Verification</span>
-        <h2 id="heading-quiz">Assessment: SHA-1 Architecture Quiz</h2>
-        <p class="lead-p">Test your understanding of SHA-1 architecture, processing pipeline, security properties, and cryptanalysis. 18 questions across 4 sections.</p>
-
-        <form id="quiz-form">
-          <div class="quiz-container">
-
-            <!-- ── SECTION A: Hash Function Fundamentals ── -->
-            <div class="quiz-section-header">Section A — Hash Function Fundamentals</div>
-
-            <div class="quiz-question-card" data-q="1" data-correct="c">
-              <h4>1. What is the output digest size of the SHA-1 algorithm?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q1" value="a"> 128 bits (16 bytes)</label>
-                <label class="quiz-option-label"><input type="radio" name="q1" value="b"> 256 bits (32 bytes)</label>
-                <label class="quiz-option-label"><input type="radio" name="q1" value="c"> 160 bits (20 bytes)</label>
-                <label class="quiz-option-label"><input type="radio" name="q1" value="d"> 512 bits (64 bytes)</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q1"><strong>Explanation:</strong> SHA-1 always outputs a 160-bit digest, displayed as 40 hexadecimal characters. This is fixed regardless of input length.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="2" data-correct="b">
-              <h4>2. A cryptographic hash function must be deterministic. What does this mean?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q2" value="a"> The same input can produce different outputs on different machines</label>
-                <label class="quiz-option-label"><input type="radio" name="q2" value="b"> The same input always produces the exact same output</label>
-                <label class="quiz-option-label"><input type="radio" name="q2" value="c"> The hash output changes every hour to prevent replay attacks</label>
-                <label class="quiz-option-label"><input type="radio" name="q2" value="d"> The output is randomised using a secret key</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q2"><strong>Explanation:</strong> Determinism guarantees that hashing the same message always yields the identical digest, making verification reliable across all platforms and times.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="3" data-correct="d">
-              <h4>3. Which property states it is computationally infeasible to find any input that maps to a given hash output?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q3" value="a"> Collision resistance</label>
-                <label class="quiz-option-label"><input type="radio" name="q3" value="b"> Second pre-image resistance</label>
-                <label class="quiz-option-label"><input type="radio" name="q3" value="c"> Determinism</label>
-                <label class="quiz-option-label"><input type="radio" name="q3" value="d"> Pre-image resistance (one-way property)</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q3"><strong>Explanation:</strong> Pre-image resistance (one-way property) ensures that given only a hash $h$, you cannot efficiently find $m$ such that $H(m) = h$. This underpins password hashing security.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="4" data-correct="a">
-              <h4>4. What is the maximum length of the input message that SHA-1 can process?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q4" value="a"> $2^{64} - 1$ bits</label>
-                <label class="quiz-option-label"><input type="radio" name="q4" value="b"> $2^{32} - 1$ bits</label>
-                <label class="quiz-option-label"><input type="radio" name="q4" value="c"> $2^{128} - 1$ bits</label>
-                <label class="quiz-option-label"><input type="radio" name="q4" value="d"> Unlimited</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q4"><strong>Explanation:</strong> The SHA-1 standard (FIPS 180-1) specifies a maximum message length of $2^{64} - 1$ bits. The 64-bit length field appended during padding encodes this value.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="5" data-correct="b">
-              <h4>5. Which NIST standard originally published the SHA-1 specification?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q5" value="a"> FIPS PUB 140-2</label>
-                <label class="quiz-option-label"><input type="radio" name="q5" value="b"> FIPS PUB 180-1</label>
-                <label class="quiz-option-label"><input type="radio" name="q5" value="c"> FIPS PUB 197</label>
-                <label class="quiz-option-label"><input type="radio" name="q5" value="d"> RFC 2104</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q5"><strong>Explanation:</strong> SHA-1 was standardised in FIPS PUB 180-1 (1995). FIPS 140-2 covers cryptographic module validation, FIPS 197 is AES, and RFC 2104 defines HMAC.</div>
-            </div>
-
-            <!-- ── SECTION B: SHA-1 Processing Pipeline ── -->
-            <div class="quiz-section-header">Section B — SHA-1 Processing Pipeline</div>
-
-            <div class="quiz-question-card" data-q="6" data-correct="c">
-              <h4>6. During SHA-1 padding, the message is padded so its bit length is congruent to which value modulo 512?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q6" value="a"> 256</label>
-                <label class="quiz-option-label"><input type="radio" name="q6" value="b"> 512</label>
-                <label class="quiz-option-label"><input type="radio" name="q6" value="c"> 448</label>
-                <label class="quiz-option-label"><input type="radio" name="q6" value="d"> 0</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q6"><strong>Explanation:</strong> Padding makes the message length $\equiv 448 \pmod{512}$. The remaining 64 bits are used to encode the original message length, making the total a multiple of 512.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="7" data-correct="a">
-              <h4>7. How many 32-bit working registers does SHA-1 use during its compression function?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q7" value="a"> 5 registers (A, B, C, D, E)</label>
-                <label class="quiz-option-label"><input type="radio" name="q7" value="b"> 4 registers (A, B, C, D)</label>
-                <label class="quiz-option-label"><input type="radio" name="q7" value="c"> 8 registers</label>
-                <label class="quiz-option-label"><input type="radio" name="q7" value="d"> 16 registers</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q7"><strong>Explanation:</strong> SHA-1 uses five 32-bit registers $A, B, C, D, E$ (total 160 bits). After all blocks are processed, these are concatenated to produce the final digest.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="8" data-correct="d">
-              <h4>8. In SHA-1's message schedule, the 16 original 32-bit words $W_0$–$W_{15}$ are expanded to how many words?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q8" value="a"> 32 words</label>
-                <label class="quiz-option-label"><input type="radio" name="q8" value="b"> 48 words</label>
-                <label class="quiz-option-label"><input type="radio" name="q8" value="c"> 64 words</label>
-                <label class="quiz-option-label"><input type="radio" name="q8" value="d"> 80 words ($W_0$–$W_{79}$)</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q8"><strong>Explanation:</strong> SHA-1 expands the 16 message words into 80 words using: $W_t = \text{ROTL}^1(W_{t-3} \oplus W_{t-8} \oplus W_{t-14} \oplus W_{t-16})$ for $t = 16$ to $79$.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="9" data-correct="b">
-              <h4>9. The 80 compression rounds in SHA-1 are divided into how many stages?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q9" value="a"> 2 stages of 40 rounds each</label>
-                <label class="quiz-option-label"><input type="radio" name="q9" value="b"> 4 stages of 20 rounds each</label>
-                <label class="quiz-option-label"><input type="radio" name="q9" value="c"> 5 stages of 16 rounds each</label>
-                <label class="quiz-option-label"><input type="radio" name="q9" value="d"> 8 stages of 10 rounds each</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q9"><strong>Explanation:</strong> SHA-1 organises 80 rounds into 4 stages (rounds 0–19, 20–39, 40–59, 60–79), each using a distinct non-linear function $f_t$ and additive constant $K_t$.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="10" data-correct="c">
-              <h4>10. What logical function does SHA-1 use during rounds 20–39 (Stage 2)?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q10" value="a"> $(B \land C) \lor (\neg B \land D)$ — Conditional (Ch)</label>
-                <label class="quiz-option-label"><input type="radio" name="q10" value="b"> $(B \land C) \lor (B \land D) \lor (C \land D)$ — Majority (Maj)</label>
-                <label class="quiz-option-label"><input type="radio" name="q10" value="c"> $B \oplus C \oplus D$ — Parity (XOR)</label>
-                <label class="quiz-option-label"><input type="radio" name="q10" value="d"> $B \land C \land D$ — AND</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q10"><strong>Explanation:</strong> Stages 2 and 4 both use the Parity function $f_t(B, C, D) = B \oplus C \oplus D$. Stage 1 uses Ch (Conditional), and Stage 3 uses Maj (Majority).</div>
-            </div>
-
-            <!-- ── SECTION C: Security Properties ── -->
-            <div class="quiz-section-header">Section C — Security Properties &amp; Avalanche Effect</div>
-
-            <div class="quiz-question-card" data-q="11" data-correct="a">
-              <h4>11. In an ideal hash function, approximately what fraction of output bits change when one input bit is flipped?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q11" value="a"> ~50% (each bit flips with probability 0.5)</label>
-                <label class="quiz-option-label"><input type="radio" name="q11" value="b"> 100% (all bits always flip)</label>
-                <label class="quiz-option-label"><input type="radio" name="q11" value="c"> Exactly 1 bit (the corresponding output bit)</label>
-                <label class="quiz-option-label"><input type="radio" name="q11" value="d"> 0% (the hash is unchanged)</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q11"><strong>Explanation:</strong> The Strict Avalanche Criterion (SAC) requires each output bit to flip with probability 0.5 per input-bit change, yielding ~50% diffusion across all 160 output bits.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="12" data-correct="d">
-              <h4>12. Second pre-image resistance ensures that given a message $m_1$, it is infeasible to find $m_2 \neq m_1$ such that:</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q12" value="a"> $m_1 = m_2$</label>
-                <label class="quiz-option-label"><input type="radio" name="q12" value="b"> $H(m_1) \neq H(m_2)$</label>
-                <label class="quiz-option-label"><input type="radio" name="q12" value="c"> $|H(m_1)| = |H(m_2)|$</label>
-                <label class="quiz-option-label"><input type="radio" name="q12" value="d"> $H(m_1) = H(m_2)$</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q12"><strong>Explanation:</strong> Second pre-image resistance prevents finding a different message that hashes to the same value as a specific known message. This is distinct from collision resistance, where both messages can be freely chosen.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="13" data-correct="b">
-              <h4>13. Which of the following best describes strong collision resistance (collision resistance)?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q13" value="a"> Given $h$, find any $m$ with $H(m) = h$</label>
-                <label class="quiz-option-label"><input type="radio" name="q13" value="b"> Find any two distinct messages $m_1 \neq m_2$ with $H(m_1) = H(m_2)$</label>
-                <label class="quiz-option-label"><input type="radio" name="q13" value="c"> Given $m_1$, find $m_2 \neq m_1$ with $H(m_1) = H(m_2)$</label>
-                <label class="quiz-option-label"><input type="radio" name="q13" value="d"> Ensure $|H(m)|$ is always 160 bits</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q13"><strong>Explanation:</strong> (Strong) Collision resistance: no adversary can efficiently find any pair $(m_1, m_2)$ with $m_1 \neq m_2$ and $H(m_1) = H(m_2)$. Both messages are freely chosen — this is harder to break than second pre-image resistance.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="14" data-correct="c">
-              <h4>14. How many bits does SHA-1 add to represent the original message length at the end of the padded block?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q14" value="a"> 32 bits</label>
-                <label class="quiz-option-label"><input type="radio" name="q14" value="b"> 128 bits</label>
-                <label class="quiz-option-label"><input type="radio" name="q14" value="c"> 64 bits (big-endian)</label>
-                <label class="quiz-option-label"><input type="radio" name="q14" value="d"> 160 bits</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q14"><strong>Explanation:</strong> SHA-1 appends a 64-bit big-endian representation of the original message length in bits. Combined with the padding bits, this makes the total padded length a multiple of 512.</div>
-            </div>
-
-            <!-- ── SECTION D: Cryptanalysis & Comparison ── -->
-            <div class="quiz-section-header">Section D — Cryptanalysis &amp; Real-World Implications</div>
-
-            <div class="quiz-question-card" data-q="15" data-correct="c">
-              <h4>15. Why has SHA-1 been deprecated for digital signatures by NIST and major CAs?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q15" value="a"> It is too slow for modern CPUs</label>
-                <label class="quiz-option-label"><input type="radio" name="q15" value="b"> Its output cannot be stored in databases</label>
-                <label class="quiz-option-label"><input type="radio" name="q15" value="c"> Practical collision attacks (SHAttered, 2017) broke collision resistance</label>
-                <label class="quiz-option-label"><input type="radio" name="q15" value="d"> Its padding scheme was proved incorrect</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q15"><strong>Explanation:</strong> Google and CWI Amsterdam (2017) published the SHAttered attack: two distinct PDF files with identical SHA-1 digests. This proves SHA-1 collision resistance is practically broken.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="16" data-correct="a">
-              <h4>16. Who first published theoretical collision vulnerabilities in SHA-1 in 2005?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q16" value="a"> Wang, Yin, and Yu</label>
-                <label class="quiz-option-label"><input type="radio" name="q16" value="b"> Rivest, Shamir, and Adleman</label>
-                <label class="quiz-option-label"><input type="radio" name="q16" value="c"> Diffie and Hellman</label>
-                <label class="quiz-option-label"><input type="radio" name="q16" value="d"> Schneier and Ferguson</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q16"><strong>Explanation:</strong> Wang, Yin, and Yu published a landmark 2005 CRYPTO paper showing SHA-1 collisions could be found far more efficiently than the brute-force birthday-attack bound, accelerating its eventual deprecation.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="17" data-correct="b">
-              <h4>17. Which algorithm is recommended by NIST as the primary replacement for SHA-1 in digital signatures?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q17" value="a"> MD5</label>
-                <label class="quiz-option-label"><input type="radio" name="q17" value="b"> SHA-256 (from the SHA-2 family)</label>
-                <label class="quiz-option-label"><input type="radio" name="q17" value="c"> SHA-1 with a longer key</label>
-                <label class="quiz-option-label"><input type="radio" name="q17" value="d"> CRC-32</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q17"><strong>Explanation:</strong> NIST recommends SHA-2 (primarily SHA-256 or SHA-384) and SHA-3 as replacements for SHA-1 in security-critical applications. MD5 is also deprecated.</div>
-            </div>
-
-            <div class="quiz-question-card" data-q="18" data-correct="d">
-              <h4>18. SHA-1's constant $K_t = \texttt{0x5A827999}$ is used in which stage?</h4>
-              <div class="quiz-options">
-                <label class="quiz-option-label"><input type="radio" name="q18" value="a"> Rounds 20–39</label>
-                <label class="quiz-option-label"><input type="radio" name="q18" value="b"> Rounds 40–59</label>
-                <label class="quiz-option-label"><input type="radio" name="q18" value="c"> Rounds 60–79</label>
-                <label class="quiz-option-label"><input type="radio" name="q18" value="d"> Rounds 0–19</label>
-              </div>
-              <div class="quiz-explanation" id="exp-q18"><strong>Explanation:</strong> $K_t = \texttt{0x5A827999}$ (which equals $\lfloor 2^{30} \sqrt{2} \rfloor$) is the additive constant for Stage 1 (rounds 0–19), which uses the Conditional (Ch) function.</div>
-            </div>
-
-          </div><!-- /quiz-container -->
-
-          <div class="actions">
-            <button class="btn btn-primary" id="btn-submit-quiz" type="button">Submit Quiz</button>
-            <button class="btn btn-secondary" id="btn-reset-quiz" type="button">Reset Answers</button>
+        <div class="lab-sim-view" data-viewpanel="rounds">
+          <p class="lab-note">Registers a, b, c, d, e at the end of each round (20 steps). Final row of each block shows the chaining value after adding the previous H.</p>
+          <div class="lab-table-wrap">
+            <table class="lab-table">
+              <thead><tr><th>Block / Round (f)</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr></thead>
+              <tbody id="sim-rounds"></tbody>
+            </table>
           </div>
-        </form>
-
-        <div class="quiz-score-banner" id="quiz-score-banner" aria-live="polite"></div>
-      </section>
-
-      <!-- ==========================================
-           6. REFERENCES PANE
-           ========================================== -->
-      <section class="section-pane content-pane" id="pane-references" data-index="6" data-category="theory" aria-labelledby="heading-references">
-        <span class="section-badge">Academic Citations</span>
-        <h2 id="heading-references">References & Further Reading</h2>
-        <p class="lead-p">The following authoritative sources, RFCs, and academic textbooks substantiate the theoretical and practical foundations of this virtual lab.</p>
-
-        <ul style="line-height: 1.8;">
-          <li>
-            <strong>NIST FIPS PUB 180-1 (1995):</strong> 
-            <em>Secure Hash Standard.</em> National Institute of Standards and Technology, U.S. Department of Commerce.
-          </li>
-          <li>
-            <strong>NIST FIPS PUB 180-4 (2015):</strong> 
-            <em>Secure Hash Standard (SHS).</em> Provides updated specifications for SHA-1, SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, and SHA-512/256.
-          </li>
-          <li>
-            <strong>RFC 3174 (2001):</strong> 
-            Eastlake, D. and Jones, P., <em>US Secure Hash Algorithm 1 (SHA1).</em> Internet Engineering Task Force (IETF).
-          </li>
-          <li>
-            <strong>William Stallings:</strong> 
-            <em>Cryptography and Network Security: Principles and Practice</em> (7th & 8th Editions), Pearson Education. Chapter on Cryptographic Hash Functions & Message Authentication Codes.
-          </li>
-          <li>
-            <strong>Stevens, M., Bursztein, E., Karpman, P., Albertini, A., & Markov, Y. (2017):</strong> 
-            <em>The first collision for full SHA-1 (SHAttered).</em> Proceedings of the 37th Annual International Cryptology Conference (CRYPTO 2017).
-          </li>
-          <li>
-            <strong>Wang, X., Yin, Y. L., & Yu, H. (2005):</strong> 
-            <em>Finding collisions in the full SHA-1.</em> Advances in Cryptology – CRYPTO 2005, Lecture Notes in Computer Science, vol 3621.
-          </li>
-        </ul>
-      </section>
-
-      <!-- ==========================================
-           7. FEEDBACK PANE
-           ========================================== -->
-      <section class="section-pane" id="pane-feedback" data-index="7" data-category="interactive" aria-labelledby="heading-feedback">
-        <span class="section-badge">Student Feedback</span>
-        <h2 id="heading-feedback">Virtual Lab Feedback</h2>
-        <p class="lead-p">Please share your experience with the SHA-1 Interactive Simulation to help us enhance educational usability.</p>
-
-        <form class="feedback-form" id="feedback-form">
-          <div class="field">
-            <label for="fb-name">Student Name:</label>
-            <input type="text" class="form-control" id="fb-name" required placeholder="Enter your full name">
+          <div class="lab-digest-label lab-gap">Step explorer</div>
+          <div class="lab-row">
+            <label class="lab-field-label" for="sim-step-block">Block</label>
+            <select id="sim-step-block" class="lab-input lab-small"></select>
+            <label class="lab-field-label" for="sim-step">Step t = <span id="sim-step-label">0</span></label>
+            <input id="sim-step" class="lab-range" type="range" min="0" max="79" value="0">
           </div>
-
-          <div class="field">
-            <label for="fb-roll">Roll Number / Student ID:</label>
-            <input type="text" class="form-control" id="fb-roll" placeholder="e.g. 10713">
-          </div>
-
-          <div class="field">
-            <label>Overall Simulation Rating:</label>
-            <div class="star-rating" id="star-rating" aria-label="Rate this experiment from 1 to 5 stars">
-              <button class="star-btn active" data-rating="1" type="button" aria-label="1 star">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              </button>
-              <button class="star-btn active" data-rating="2" type="button" aria-label="2 stars">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              </button>
-              <button class="star-btn active" data-rating="3" type="button" aria-label="3 stars">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              </button>
-              <button class="star-btn active" data-rating="4" type="button" aria-label="4 stars">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              </button>
-              <button class="star-btn active" data-rating="5" type="button" aria-label="5 stars">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              </button>
-            </div>
-            <input type="hidden" id="fb-rating" value="5">
-          </div>
-
-          <div class="field">
-            <label for="fb-clarity">Did the simulation clearly demonstrate the Avalanche Effect?</label>
-            <select class="form-control" id="fb-clarity">
-              <option value="yes-completely">Yes, completely clear</option>
-              <option value="mostly-clear">Mostly clear</option>
-              <option value="somewhat-clear">Somewhat clear</option>
-              <option value="needs-improvement">Needs more visualization</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="fb-comments">Comments / Suggestions for Improvement:</label>
-            <textarea id="fb-comments" placeholder="Write any suggestions or remarks here..."></textarea>
-          </div>
-
-          <div class="actions">
-            <button class="btn btn-primary" type="submit">Submit Feedback</button>
-          </div>
-        </form>
-
-        <div class="feedback-success" id="feedback-success" role="status" aria-live="polite">
-          Thank you! Your feedback has been recorded successfully.
+          <div class="lab-terminal" id="sim-stepinfo"></div>
         </div>
-      </section>
 
-    </article>
-
-    <!-- Right Column: Explanation Resources Sidebar (Exact design from screenshot with clean SVG icons) -->
-    <aside class="sidebar" id="sidebar-container" aria-label="Experiment resources">
-      <div class="sidebar-card">
-        <div class="sidebar-header">
-          <span class="sidebar-title">Explanation Resources</span>
-          <button class="sidebar-toggle-btn" id="btn-sidebar-collapse" aria-label="Toggle resources list">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="icon-sidebar-toggle">
-              <polyline points="18 15 12 9 6 15"></polyline>
-            </svg>
-          </button>
+        <div class="lab-sim-view" data-viewpanel="avalanche">
+          <label class="lab-field-label" for="sim-input2">Modified message</label>
+          <input id="sim-input2" class="lab-input" type="text" value="abd" maxlength="200" autocomplete="off">
+          <div class="lab-actions">
+            <button type="button" class="lab-btn" id="sim-flip">Flip last bit</button>
+            <button type="button" class="lab-btn" id="sim-append">Append a dot</button>
+            <button type="button" class="lab-btn" id="sim-copy">Copy original</button>
+          </div>
+          <div class="lab-digest-label">Original digest</div>
+          <div class="lab-digest lab-digest-small" id="sim-hash-a"></div>
+          <div class="lab-digest-label lab-gap">Modified digest (differences highlighted)</div>
+          <div class="lab-digest lab-digest-small" id="sim-hash-b"></div>
+          <div class="lab-stat-grid">
+            <div class="lab-stat"><span>Changed bits</span><p id="sim-changed"></p></div>
+            <div class="lab-stat"><span>Percentage</span><p id="sim-percent"></p></div>
+            <div class="lab-stat"><span>Changed hex characters</span><p id="sim-hexdiff"></p></div>
+          </div>
+          <p class="lab-note" id="sim-observation"></p>
         </div>
-        <ul class="nav-item-list" id="resources-list" role="tablist">
-          
-          <li class="nav-item" data-category="theory">
-            <button class="nav-link active" data-target="pane-aim" role="tab" aria-selected="true">
-              <span class="nav-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <circle cx="12" cy="12" r="6"></circle>
-                  <circle cx="12" cy="12" r="2"></circle>
-                </svg>
-              </span>
-              <span>Aim & Objectives</span>
-            </button>
-          </li>
+      </div>
+    </section>
 
-          <li class="nav-item" data-category="theory">
-            <button class="nav-link" data-target="pane-theory" role="tab" aria-selected="false">
-              <span class="nav-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                </svg>
-              </span>
-              <span>Theory - SHA-1 Algorithm</span>
-            </button>
-          </li>
-
-          <li class="nav-item" data-category="theory">
-            <button class="nav-link" data-target="pane-procedure" role="tab" aria-selected="false">
-              <span class="nav-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                  <line x1="8" y1="11" x2="16" y2="11"></line>
-                  <line x1="8" y1="16" x2="16" y2="16"></line>
-                </svg>
-              </span>
-              <span>Procedure - Step by Step</span>
-            </button>
-          </li>
-
-          <li class="nav-item" data-category="interactive">
-            <button class="nav-link" data-target="pane-simulation" role="tab" aria-selected="false">
-              <span class="nav-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-              </span>
-              <span>Interactive Simulation</span>
-            </button>
-          </li>
-
-          <li class="nav-item" data-category="theory">
-            <button class="nav-link" data-target="pane-assessment" role="tab" aria-selected="false">
-              <span class="nav-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="9 11 12 14 22 4"></polyline>
-                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                </svg>
-              </span>
-              <span>Assessment - Concept Quiz</span>
-            </button>
-          </li>
-
-          <li class="nav-item" data-category="theory">
-            <button class="nav-link" data-target="pane-references" role="tab" aria-selected="false">
-              <span class="nav-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                </svg>
-              </span>
-              <span>References & Literature</span>
-            </button>
-          </li>
-
-          <li class="nav-item" data-category="interactive">
-            <button class="nav-link" data-target="pane-feedback" role="tab" aria-selected="false">
-              <span class="nav-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                </svg>
-              </span>
-              <span>Student Feedback Form</span>
-            </button>
-          </li>
-
+    <section id="references" class="lab-section">
+      <span class="lab-section-tag">Section 5</span>
+      <h2 class="lab-section-title">References</h2>
+      <div class="lab-prose">
+        <ul>
+          <li>NIST FIPS PUB 180-4 (2015), Secure Hash Standard. <a href="https://csrc.nist.gov/pubs/fips/180-4/upd1/final" target="_blank" rel="noopener noreferrer">csrc.nist.gov</a></li>
+          <li>RFC 3174 (2001), US Secure Hash Algorithm 1 (SHA1). <a href="https://www.rfc-editor.org/rfc/rfc3174" target="_blank" rel="noopener noreferrer">rfc-editor.org</a></li>
+          <li>Stevens, Bursztein, Karpman, Albertini, Markov (2017), The first collision for full SHA-1 (SHAttered). <a href="https://shattered.io/" target="_blank" rel="noopener noreferrer">shattered.io</a></li>
+          <li>Wang, Yin, Yu (2005), Finding collisions in the full SHA-1, CRYPTO 2005.</li>
+          <li>William Stallings, Cryptography and Network Security: Principles and Practice, Pearson Education.</li>
         </ul>
       </div>
+    </section>
 
-      <!-- Quick Lab Summary Card -->
-      <div class="quick-info-box">
-        <div class="quick-info-title">Experiment Quick Info</div>
-        <div class="info-item">
-          <span class="info-label">Experiment ID</span>
-          <span class="info-value">EXP09</span>
-        </div>
-        <div class="info-item">
-          <span class="info-label">Output Digest</span>
-          <span class="info-value">160 Bits / 40 Hex</span>
-        </div>
-        <div class="info-item">
-          <span class="info-label">Block Size</span>
-          <span class="info-value">512 Bits (16 words)</span>
-        </div>
-        <div class="info-item">
-          <span class="info-label">Rounds</span>
-          <span class="info-value">80 (4 stages × 20)</span>
-        </div>
-        <div class="info-item">
-          <span class="info-label">Standard</span>
-          <span class="info-value">NIST FIPS PUB 180-1</span>
-        </div>
-      </div>
-    </aside>
-
-  </main>
-
-  <!-- Site Footer with Team Credits -->
-  <footer class="site-footer">
-    <div class="footer-container">
-      <div>
-        <strong>Virtual Cryptography Laboratory</strong> — Department of Computer Engineering
-      </div>
-      <div class="footer-credits">
-        <span>UI/Frontend: <strong>Swar (10713)</strong></span>
-        <span>SHA-1 Core: <strong>Tanush Chavan (10710)</strong></span>
-        <span>Interactive Simulation: <strong>Aaron Deniz (10719)</strong></span>
-        <span>Sensitivity Analysis: <strong>Asher (10715)</strong></span>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Toast Notification element -->
-  <div class="toast-notice" id="toast-notice" role="alert" aria-live="assertive"></div>
-
-  <!-- Main JavaScript File -->
+  </div>
   <script src="script.js"></script>
 </body>
 </html>

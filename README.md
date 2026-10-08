@@ -1,73 +1,32 @@
-# SHA-1 Hash Algorithm
+## Group
+Group B
 
-## Experiment Name
+## Experiment ID
+EXP02
 
-SHA-1 - Generate the SHA-1 hash value for a given input message and study its output characteristics and sensitivity to input changes.
+## Navigation Title
+SHA-1 Secure Hash Algorithm
 
-## Purpose
+## Short Description
+Explore SHA-1 padding, the 80-step compression function and the avalanche effect by hashing messages live in the browser.
 
-This interactive simulation generates SHA-1 digests and compares the output for an original message and a modified message. It makes the 160-bit output, hexadecimal representation, changed-bit count, and percentage difference visible.
+## Folder
+/experiments/sha1/
 
-## Module Structure
+## Entry File
+index.html
 
-```text
-experiment-template/
-├── index.html
-├── style.css
-├── script.js
-└── README.md
-```
+## Expected Navigation Link
+/experiments/sha1/
 
-This module is self-contained and does not modify the main application, shared styles, or other experiment modules.
+## Required Libraries
+None
 
-## Features
+## Input
+A text message (up to 200 characters) and an optional modified message used for the avalanche comparison.
 
-- Message input with a live character count
-- SHA-1 hash generation
-- 160-bit output represented as 40 hexadecimal characters
-- Original versus modified message comparison
-- Changed-bit and percentage calculations
-- Hash-character difference highlighting
-- Quick sensitivity tests
-- Dynamic observations and validation messages
+## Output
+The 160-bit SHA-1 digest as 40 hexadecimal characters, the RFC 3174 padded message, the 80-word message schedule, the a-e register state after each round and step, and the changed-bit count and percentage between two digests.
 
-## Input and Output
-
-The user enters a message. The output is a 160-bit SHA-1 hash represented by 40 hexadecimal characters.
-
-## Sensitivity Test
-
-The simulation hashes both messages, converts each 40-character hexadecimal hash into 160 bits, and counts corresponding bits that differ. The percentage is calculated as `changedBits / 160 * 100` and displayed to two decimal places.
-
-## SHA-1 Core
-
-`generateSHA1(message)` in `script.js` uses the browser Web Crypto API when available and includes a local SHA-1 fallback for non-secure HTTP contexts. No backend, Java file, framework, or external dependency is required.
-
-## Sensitivity Integration
-
-`calculateSensitivity(originalHash, modifiedHash)` is the sensitivity integration point. It currently contains a temporary local implementation. Asher's implementation can replace this function as long as it returns `changedBits`, `totalBits`, and `percentageChanged`.
-
-## Test Cases
-
-The script self-checks these known vectors when the module loads:
-
-| Input | SHA-1 |
-| --- | --- |
-| `abc` | `a9993e364706816aba3e25717850c26c9cd0d89d` |
-| empty string | `da39a3ee5e6b4b0d3255bfef95601890afd80709` |
-
-These values are validation vectors only and are not used as interactive output.
-
-## Integration Instructions
-
-Place this self-contained module at `/experiments/sha1/` and add its `index.html` to the common navigation when the integration team connects the experiment to the wider laboratory. The module has no framework or external dependency and does not modify shared styles, navigation, or other experiments.
-
-## Evaluation Questions
-
-1. Why does SHA-1 always produce a 160-bit digest?
-2. How does changing one input character demonstrate the avalanche effect?
-3. Why is SHA-1 no longer recommended for collision-resistant security applications?
-
-## Quiz Questions
-
-The Assessment pane includes five multiple-choice questions covering SHA-1 digest size, block size, compression rounds, the avalanche effect, and the reason SHA-1 was deprecated.
+## Theory Summary
+SHA-1 pads the message to a multiple of 512 bits, expands each block into 80 words with a left-rotate by 1, and runs 80 compression steps in four rounds using the functions Ch, Parity, Maj and Parity with constants 5A827999, 6ED9EBA1, 8F1BBCDC and CA62C1D6. The five 32-bit registers are added into the chaining value after each block to produce a 160-bit digest. SHA-1 is deprecated because practical collisions (SHAttered, 2017) exist.
